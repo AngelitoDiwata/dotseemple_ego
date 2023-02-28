@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import validator from 'validator'
-export default function SubmitForm({ currentList, setList }) {
+import React, { useState } from 'react'
+export default function SubmitForm({ currentList, setList, setAlert }) {
 
     const [handle, setHandle] = useState('')
-    const [link, setLink] = useState('')
     const [code, setCode] = useState('')
-    const [isLinkValid, setIsLinkValid] = useState(true)
+    const [currentCollection, setCurrentCollection] = useState([])
 
     const FileRead = async () => {
         const res = await fetch('/api')
@@ -20,66 +18,75 @@ export default function SubmitForm({ currentList, setList }) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(FindCode())
+            body: JSON.stringify({
+                data: FindCode(),
+                append: {
+                    handle,
+                    code,
+                    collections: currentCollection
+                }
+            })
+        }).then((err) => {
+            setAlert(err.status !== 401 ? '' :'Error', err.status !== 401 ? `Thank you for being there, ${handle}` : 'Invalid Code!')
+        }).catch((err) => {
+           setAlert('Error', err)
         })
         return await FileRead()
     }
 
     const FindCode = () => {
         const listData = currentList
-        listData.forEach((record, index) => {
-            if (record.code === code) {
-                const joinerData = {
-                    handle: handle,
-                    link: link
+        if (listData.filter((item) => item.handle === handle).length < 1) {
+            listData.push({
+                handle,
+                connections: 1,
+                collections: [code]
+            })
+        } else {
+            listData.forEach((record, index) => {
+                console.log(record)
+                if (record.handle === handle) {
+                    setCurrentCollection(listData[index].collections)
+                    listData[index].connections += 1
+                    listData[index].collections.push(code)
                 }
-                if (listData[index].connections.filter((connection) => {
-                    return connection.handle === handle
-                }).length > 0) {
-                    alert('⦿ Already in the list! ⦿')
-                } else {
-                    listData[index].connections.push(joinerData)
-                    alert(`Thank you for joining, ${handle}`)
-                }
-            }
-        })
+            })
+        }
         return listData
     }
 
     const checkFormEmpty = () => {
-        return handle.trim() !== '' && link.trim() !== '' && code.trim() !== ''
+        return handle.trim() !== '' && code.trim() !== ''
     }
 
-    const validCodes = () => {
-        const listData = currentList
-        return listData.map((record) => {
-            return record.code
+    const Submit = () => {
+        FileWrite().then((data) => {
+            setList(data)
+        }).catch(() => {
+            setAlert('Error!', '⦿ Please try again. ⦿')
         })
     }
 
     const SubmitForm = () => {
-        if (!validCodes().includes(code)) {
-            alert('⦿ INVALID CODE! ⦿')
-        } else {
-            if (isLinkValid && checkFormEmpty() && validator.isURL(link)) {
-                FileWrite().then((data) => {
-                    setList(data)
-                }).catch(() => {
-                    alert(`Error. please try again.`)
-                })
+        try {
+            if (!checkFormEmpty()) {
+                setAlert('Error!', '⦿ Details empty. \n Please try again. ⦿')
+            } else if (currentList.filter((item) => item.handle === handle)[0].collections.includes(code)) {
+                setAlert('code already claimed','Please try again.')
             } else {
-                alert('⦿ please enter a valid details ⦿')
+                throw null
             }
+        } catch (_) {
+            Submit()
         }
     }
 
 
     return (
-        <div className="sticky z-50 bg-black top-0 w-4/5 md:w-3/4 m-auto flex flex-col md:flex-row items-center justify-center py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0">
-            <input onChange={(e) => setHandle(e.target.value)} placeholder="twitter handle" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" />
-            <input onChange={(e) => { setLink(e.target.value) }} placeholder="retweet link" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" />
+        <div className="sticky z-50 bg-black top-0 w-4/5 md:w-full m-auto flex flex-col md:flex-row items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-20">
+            <input onChange={(e) => setHandle(e.target.value)} placeholder="twitter handle" className="w-full md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1" />
             <input onChange={(e) => setCode(e.target.value)} placeholder="CODE" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" />
-            <button onClick={SubmitForm} className="w-full md:w-1/4 hover:scale-110 transition-all font-semibold border hover:font-black hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1">Submit</button>
+            <button onClick={SubmitForm} className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white">Submit</button>
         </div>
     )
 }
