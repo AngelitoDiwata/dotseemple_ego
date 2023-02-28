@@ -35,13 +35,14 @@ export default function Home() {
   return (
     <div className="App w-full h-screen bg-black">
       <SubmitForm setAlert={(title, message) => setAlert(title, message)} currentList={currentList} setList={(value) => setCurrentList(value)} />
-      <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto flex flex-col md:grid md:grid-cols-4 gap-4 h-screen'>
+      <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto grid grid-cols-2 md:grid-cols-4 gap-1 h-fit'>
         {
           currentList.map((index, ind) => {
             return <div key={ind} className='w-full px-10 py-5 m-auto flex flex-col h-fit space-x-5 items-center justify-center text-white my-5 bg-black rounded-lg'>
-              <div className="w-full flex flex-row items-center justify-around">
-                <span className='text-xs font-semibold'>{index.handle}</span>
-                <span className='text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{index.connections}</sup></span>
+              <div className="w-full flex flex-row items-center justify-around space-x-2">
+              <a className='no-underline decoration-auto text-white text-xs font-semibold'
+          href={`https://twitter.com/${index.handle.replaceAll('@', '')}`}>{index.handle}</a>
+                <span className='text-xl md:text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{index.connections}</sup></span>
               </div>
               <span style={{
                 'overflowWrap': 'break-word',

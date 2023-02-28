@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+
+const withPWA = require("next-pwa")({
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+});
+
+const nextConfig = withPWA({
     async headers() {
         return [{
             // matching all API routes
@@ -13,6 +20,6 @@ const nextConfig = {
         }]
     },
     reactStrictMode: false,
-}
+})
 
 module.exports = nextConfig

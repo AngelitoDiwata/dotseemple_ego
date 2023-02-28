@@ -83,8 +83,8 @@ export default function SubmitForm({ currentList, setList, setAlert }) {
 
 
     return (
-        <div className="sticky z-50 bg-black top-0 w-4/5 md:w-full m-auto flex flex-col md:flex-row items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-20">
-            <input onChange={(e) => setHandle(e.target.value)} placeholder="twitter handle" className="w-full md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1" />
+        <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
+            <input onChange={(e) => setHandle(e.target.value)} placeholder="twitter handle" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1" />
             <input onChange={(e) => setCode(e.target.value)} placeholder="CODE" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" />
             <button onClick={SubmitForm} className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white">Submit</button>
         </div>
