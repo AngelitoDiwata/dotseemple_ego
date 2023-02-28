@@ -1,6 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.swal-modal {
+    background-color: #0e1111;
+    color: white
+}
+
+.swal-title,
+.swal-text {
+    color: white
+}
+
+.swal-button {
+    background-color: black;
+    border-color: white;
+    color: white;
+}
+
+.swal-button:not([disabled]):hover {
+    background-color: #0e1111;
+    transition: all;
+}
+
+.swal-icon--success {
+    background-color: black;
+}
+
 :root {
     --max-width: 1100px;
     --border-radius: 12px;
