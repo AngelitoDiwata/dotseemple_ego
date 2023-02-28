@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 export default function SubmitForm({ currentList, setList, setAlert }) {
 
     const [handle, setHandle] = useState('')
@@ -19,7 +19,7 @@ export default function SubmitForm({ currentList, setList, setAlert }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                data: FindCode(),
+                data: await FindCode(),
                 append: {
                     handle,
                     code,
@@ -27,15 +27,15 @@ export default function SubmitForm({ currentList, setList, setAlert }) {
                 }
             })
         }).then((err) => {
-            setAlert(err.status !== 401 ? '' :'Error', err.status !== 401 ? `Thank you for being there, ${handle}` : 'Invalid Code!')
+            setAlert(err.status !== 401 ? '' : 'Error', err.status !== 401 ? `Thank you for being there, ${handle}` : 'Invalid Code!')
         }).catch((err) => {
-           setAlert('Error', err)
+            setAlert('Error', err)
         })
         return await FileRead()
     }
 
-    const FindCode = () => {
-        const listData = currentList
+    const FindCode = async () => {
+        const listData = await FileRead()
         if (listData.filter((item) => item.handle === handle).length < 1) {
             listData.push({
                 handle,
@@ -72,7 +72,7 @@ export default function SubmitForm({ currentList, setList, setAlert }) {
             if (!checkFormEmpty()) {
                 setAlert('Error!', '⦿ Details empty. \n Please try again. ⦿')
             } else if (currentList.filter((item) => item.handle === handle)[0].collections.includes(code)) {
-                setAlert('code already claimed','Please try again.')
+                setAlert('code already claimed', 'Please try again.')
             } else {
                 throw null
             }
