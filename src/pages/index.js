@@ -110,7 +110,7 @@ export default function Home() {
     }
 
 return (
-    <div>
+    <div className='App w-full h-screen bg-black'>
         <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
 
         <input placeholder="twitter handle" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1"  value={handle} onChange={(e) => changeHandler(e, setHandle)} />
@@ -142,6 +142,12 @@ return (
                 })
             }
         </div>
+        <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center py-5">
+        <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
+          href="https://twitter.com/dotseemple">
+          @dotseemple
+        </a>
+      </footer >
     </div>
 )
 }
