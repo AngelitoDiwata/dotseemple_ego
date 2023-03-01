@@ -1,72 +1,147 @@
-import { useEffect, useState } from "react"
-import SubmitForm from "@/components/SubmitForm"
+import { React, useState, useEffect } from 'react'
+import { db } from '@/firebase'
+import { set, ref, onValue, update } from "firebase/database";
 import swal from 'sweetalert';
+
 export default function Home() {
+    const [list, setList] = useState([])
+    const [handle, setHandle] = useState("")
+    const [code, setCode] = useState("")
+    const [connections, setConnections] = useState(1)
+    const [validCodes, setValidCodes] = useState([])
+    const setAlert = (title, message) => {
+        swal({
+            title: title,
+            text: message,
+            timer: 2500,
+            showCancelButton: false,
+            button: false
+        }).then(
+            function () { },
+            function (dismiss) {
+                if (dismiss === 'timer') {
+                }
+            });
+    }
+    useEffect(() => {
+        onValue(ref(db), (snapshot) => {
+            setList([]);
+            const res = snapshot.val();
+            res.data !== undefined ? Object.values(res.data).map((entry) => {
+                setList((oldArray) => [...oldArray, entry]);
+            }) : setList([])
+            res.codes !== undefined ? Object.values(res.codes).map((code) => {
+                setValidCodes((oldArray) => [...oldArray, code]);
+            }) : setValidCodes([])
+        });
+    }, []);
 
-  const [currentList, setCurrentList] = useState([])
-
-  const FileRead = async () => {
-    const res = await fetch('/api')
-    const resJson = await res.json()
-    return resJson.data
-  }
-
-  const setAlert = (title, message) => {
-    swal({
-      title: title,
-      text: message,
-      timer: 2500,
-      showCancelButton: false,
-      showConfirmButton: false
-    }).then(
-      function () {},
-      function (dismiss) {
-        if (dismiss === 'timer') {
+    const handleCheck = () => {
+        const uuid = window.crypto.randomUUID()
+        const itemModel = {
+            handle,
+            connections,
+            collections: [code],
+            uuid
         }
-      });
-  }
-
-  useEffect(() => {
-    FileRead().then((data) => {
-      setCurrentList(data)
-    })
-  }, [])
-
-  return (
-    <div className="App w-full h-screen bg-black">
-      <SubmitForm setAlert={(title, message) => setAlert(title, message)} currentList={currentList} setList={(value) => setCurrentList(value)} />
-      <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto grid grid-cols-2 md:grid-cols-4 gap-1 h-fit'>
-        {
-          currentList.map((index, ind) => {
-            return <div key={ind} className='w-full px-10 py-5 m-auto flex flex-col h-fit space-x-5 items-center justify-center text-white my-5 bg-black rounded-lg'>
-              <div className="w-full flex flex-row items-center justify-around space-x-2">
-              <a className='no-underline decoration-auto text-white text-xs font-semibold'
-          href={`https://twitter.com/${index.handle.replaceAll('@', '')}`}>{index.handle}</a>
-                <span className='text-xl md:text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{index.connections}</sup></span>
-              </div>
-              <span style={{
-                'overflowWrap': 'break-word',
-                'wordWrap': 'break-word',
-                'hyphens': 'auto'
-              }} className='text-3xl break-all w-full leading-3 text-left mb-5 font-black tracking-widest'>{
-                  (<div>
-                    {[...Array(index.connections).keys()].map(() => {
-                      return '.'
-                    }).join('')}
-                  </div>)
-                }</span>
-            </div>
-          })
+        if (editMode()) {
+            const listCheck = list.filter((item) => item.handle === handle)
+            const updateModel = {
+                handle: listCheck[0].handle,
+                connections: listCheck[0].connections + 1,
+                collections: [...listCheck[0].collections, code],
+                uuid: getTempUUID()
+            }
+            updateDatabase(updateModel)
+        } else {
+            writeToDatabase(itemModel)
         }
+    }
 
-      </div>
-      <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center py-5">
-        <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
-          href="https://twitter.com/dotseemple">
-          @dotseemple
-        </a>
-      </footer >
-    </div >
+    const editMode = () => {
+        const listCheck = list.filter((item) => item.handle === handle)
+        return listCheck.length > 0
+    }
 
-  )
+    const getTempUUID = () => {
+        const listCheck = list.filter((item) => item.handle === handle)
+        try {
+            return listCheck[0].uuid
+        } catch (_) {
+            return ''
+        }
+    }
+
+    const updateDatabase = (data) => {
+        update(ref(db, `/data/${getTempUUID()}`), data);
+        setAlert('', `Thanks for being there, ${handle}`)
+        setHandle('')
+        setCode('')
+    }
+
+    const writeToDatabase = (data) => {
+        set(ref(db, `/data/${data.uuid}`), data);
+        setAlert('', `Thanks for being there, ${handle}`)
+        setHandle('')
+        setCode('')
+    };
+
+    const changeHandler = (e, handler) => {
+        handler(e.target.value)
+    }
+
+    const validateEntry = () => {
+        try {
+            if (handle.split('')[0] !== '@') {
+                setAlert('Error', 'Invalid user handle!')
+            } 
+            else if (handle.trim() === '' || code.trim() === '') {
+                setAlert('Error', 'Handle or code cannot be empty!')
+            } else if (!validCodes.map((item) => item.code).includes(code)) {
+                setAlert('Error', 'Invalid code!')
+            } else if (list.filter((item) => item.handle === handle)[0].collections.includes(code)) {
+                setAlert('Error', 'Code already claimed!')
+            } else {
+                handleCheck()
+            }
+        } catch (_) {
+            handleCheck()
+        }
+    }
+
+return (
+    <div>
+        <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
+
+        <input placeholder="twitter handle" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1"  value={handle} onChange={(e) => changeHandler(e, setHandle)} />
+        <input placeholder="CODE" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" value={code} onChange={(e) => changeHandler(e, setCode)} />
+        <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={validateEntry}>submit</button>
+        </div>
+
+        <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto grid grid-cols-2 md:grid-cols-4 gap-1 h-fit'>
+            {
+                list.map((data, ind) => {
+                    return <div key={ind} className='w-full px-10 py-5 m-auto flex flex-col h-fit space-x-5 items-center justify-center text-white my-5 bg-black rounded-lg'>
+                        <div className="w-full flex flex-row items-center justify-around space-x-2">
+                            <a className='no-underline decoration-auto text-white text-xs font-semibold'
+                                href={`https://twitter.com/${data.handle.replaceAll('@', '')}`}>{data.handle}</a>
+                            <span className='text-xl md:text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{data.connections}</sup></span>
+                        </div>
+                        <span style={{
+                            'overflowWrap': 'break-word',
+                            'wordWrap': 'break-word',
+                            'hyphens': 'auto'
+                        }} className='text-3xl break-all w-full leading-3 text-left mb-5 font-black tracking-widest'>{
+                                (<div>
+                                    {[...Array(data.connections).keys()].map(() => {
+                                        return '.'
+                                    }).join('')}
+                                </div>)
+                            }</span>
+                    </div>
+                })
+            }
+        </div>
+    </div>
+)
 }
