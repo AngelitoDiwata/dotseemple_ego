@@ -36,8 +36,10 @@ export default function DotSeempleCodes() {
             setValidCodes([]);
             const res = snapshot.val();
             if (res) {
-                res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                    setValidCodes((oldArray) => [...oldArray, code]);
+                res.codes !== undefined ? Object.values(res.codes).forEach((code) => {
+                    if (new Date(code.ttl) > new Date()) {
+                        setValidCodes((oldArray) => [...oldArray, code]);
+                    }
                 }) : setValidCodes([])
             }
         });
@@ -80,7 +82,7 @@ export default function DotSeempleCodes() {
             </div>
             <div className='w-full h-screen bg-black flex flex-col items-center justify-center space-y-5'>
                 {
-                   validCodes.length > 0 ? validCodes.map((code) => <CodeCard name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
+                    validCodes.length > 0 ? validCodes.map((code) => <CodeCard key={code.code} name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
                 }
             </div>
         </div>

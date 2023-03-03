@@ -31,7 +31,9 @@ export default function Home() {
                 setList((oldArray) => [...oldArray, entry]);
             }) : setList([])
             res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                setValidCodes((oldArray) => [...oldArray, code]);
+                if (new Date(code.ttl) > new Date()) {
+                    setValidCodes((oldArray) => [...oldArray, code]);
+                }
             }) : setValidCodes([])
         });
     }, []);
@@ -94,7 +96,7 @@ export default function Home() {
         try {
             if (handle.split('')[0] !== '@') {
                 setAlert('Error', 'Invalid user handle!')
-            } 
+            }
             else if (handle.trim() === '' || code.trim() === '') {
                 setAlert('Error', 'Handle or code cannot be empty!')
             } else if (!validCodes.map((item) => item.code).includes(code)) {
@@ -109,45 +111,45 @@ export default function Home() {
         }
     }
 
-return (
-    <div className='App w-full h-screen bg-black'>
-        <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
+    return (
+        <div className='App w-full h-screen bg-black'>
+            <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
 
-        <input placeholder="twitter handle" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1"  value={handle} onChange={(e) => changeHandler(e, setHandle)} />
-        <input placeholder="CODE" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" value={code} onChange={(e) => changeHandler(e, setCode)} />
-        <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={validateEntry}>submit</button>
-        </div>
+                <input placeholder="twitter handle" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1" value={handle} onChange={(e) => changeHandler(e, setHandle)} />
+                <input placeholder="CODE" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" value={code} onChange={(e) => changeHandler(e, setCode)} />
+                <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={validateEntry}>submit</button>
+            </div>
 
-        <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto grid grid-cols-2 md:grid-cols-4 gap-1 h-fit'>
-            {
-                list.map((data, ind) => {
-                    return <div key={ind} className='w-full px-10 py-5 m-auto flex flex-col h-fit space-x-5 items-center justify-center text-white my-5 bg-black rounded-lg'>
-                        <div className="w-full flex flex-row items-center justify-around space-x-2">
-                            <a className='no-underline decoration-auto text-white text-xs font-semibold'
-                                href={`https://twitter.com/${data.handle.replaceAll('@', '')}`}>{data.handle}</a>
-                            <span className='text-xl md:text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{data.connections}</sup></span>
+            <div className='bg-black w-full px-2 md:px-20 my-10 mx-auto grid grid-cols-2 md:grid-cols-4 gap-1 h-fit'>
+                {
+                    list.map((data, ind) => {
+                        return <div key={ind} className='w-full px-10 py-5 m-auto flex flex-col h-fit space-x-5 items-center justify-center text-white my-5 bg-black rounded-lg'>
+                            <div className="w-full flex flex-row items-center justify-around space-x-2">
+                                <a className='no-underline decoration-auto text-white text-xs font-semibold'
+                                    href={`https://twitter.com/${data.handle.replaceAll('@', '')}`}>{data.handle}</a>
+                                <span className='text-xl md:text-5xl font-black flex flex-row items-start justify-start tracking-tighter'>⦿<sup className='text-xs tracking-normal font-light'>{data.connections}</sup></span>
+                            </div>
+                            <span style={{
+                                'overflowWrap': 'break-word',
+                                'wordWrap': 'break-word',
+                                'hyphens': 'auto'
+                            }} className='text-3xl break-all w-full leading-3 text-left mb-5 font-black tracking-widest'>{
+                                    (<div>
+                                        {[...Array(data.connections).keys()].map(() => {
+                                            return '.'
+                                        }).join('')}
+                                    </div>)
+                                }</span>
                         </div>
-                        <span style={{
-                            'overflowWrap': 'break-word',
-                            'wordWrap': 'break-word',
-                            'hyphens': 'auto'
-                        }} className='text-3xl break-all w-full leading-3 text-left mb-5 font-black tracking-widest'>{
-                                (<div>
-                                    {[...Array(data.connections).keys()].map(() => {
-                                        return '.'
-                                    }).join('')}
-                                </div>)
-                            }</span>
-                    </div>
-                })
-            }
+                    })
+                }
+            </div>
+            <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center py-5">
+                <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
+                    href="https://twitter.com/dotseemple">
+                    @dotseemple
+                </a>
+            </footer >
         </div>
-        <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center py-5">
-        <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
-          href="https://twitter.com/dotseemple">
-          @dotseemple
-        </a>
-      </footer >
-    </div>
-)
+    )
 }
