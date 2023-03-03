@@ -13,7 +13,7 @@ export default function DotSeempleCodes() {
     const [validCodes, setValidCodes] = useState([])
     const [desc, setDesc] = useState('')
     const [code, setCode] = useState('')
-    const [endDate, setEndDate] = useState(new Date())
+    const [endDate, setEndDate] = useState('')
     const changeHandler = (e, handler) => {
         handler(e.target.value)
     }
@@ -44,7 +44,12 @@ export default function DotSeempleCodes() {
     }, []);
 
     const submit = () => {
-        if (scheduledJobs.map((job) => job.code).includes(code)) {
+        if (new Date(endDate) < new Date() || endDate === '') {
+            setAlert('', `Please select a present time.`)
+        } else if (code.trim().length === 0 || desc.trim().length === 0) {
+            setAlert('', `Please provide valid code values.`)
+        }
+        else if (scheduledJobs.map((job) => job.code).includes(code)) {
             setAlert('', `Code already running...`)
         } else {
             const job = schedule.scheduleJob(new Date(new Date(endDate).toLocaleString('en', { timeZone: 'Asia/Manila' })),
@@ -70,12 +75,12 @@ export default function DotSeempleCodes() {
             <div className="sticky z-50 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-center justify-end py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
                 <input placeholder="Code description" className="w-1/2 md:w-40 border border-white bg-black rounded-lg outline-white px-3 py-1" value={desc} onChange={(e) => changeHandler(e, setDesc)} />
                 <input placeholder="Actual Code" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" value={code} onChange={(e) => changeHandler(e, setCode)} />
-                <input type="datetime-local" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" onChange={(e) => changeHandler(e, setEndDate)} value={endDate} />
+                <input type="datetime-local" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" onChange={(e) => changeHandler(e, setEndDate)} defaultValue={endDate} />
                 <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={submit}>submit</button>
             </div>
             <div className='w-full h-screen bg-black flex flex-col items-center justify-center space-y-5'>
                 {
-                   validCodes.length > 0 ? validCodes.map((code) => <CodeCard name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, such empty.</span>
+                   validCodes.length > 0 ? validCodes.map((code) => <CodeCard name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
                 }
             </div>
         </div>
