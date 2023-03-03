@@ -10,7 +10,9 @@ let scheduledJobs = [
 ]
 export default async function handler(req, res) {
     const { method, body } = req
-
+    if (method === "GET") {
+        res.send(scheduledJobs)
+    }
     if (method === "POST") {
         if (scheduledJobs.map((job) => job.code).includes(body.code)) {
             res.send(`Code already running...`)
