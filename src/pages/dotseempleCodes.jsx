@@ -1,8 +1,13 @@
 import CodeCard from '@/components/CodeCard'
 import { React, useState, useEffect } from 'react'
 import { db } from '@/firebase'
-import { set, ref, onValue, update } from "firebase/database";
+import { set, ref, onValue, remove } from "firebase/database";
 import swal from 'sweetalert';
+import schedule from 'node-schedule'
+
+let scheduledJobs = [
+
+]
 
 export default function DotSeempleCodes() {
     const [validCodes, setValidCodes] = useState([])
@@ -39,28 +44,25 @@ export default function DotSeempleCodes() {
     }, []);
 
     const submit = () => {
-        fetch('/api/schedule',
-            {
-                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                mode: "cors", // no-cors, *cors, same-origin
-                cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: "same-origin", // include, *same-origin, omit
-                headers: {
-                    "Content-Type": "application/json",
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                redirect: "follow", // manual, *follow, error
-                referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify({
-                    "name": desc,
-                    "code": code,
-                    "endTime": endDate
-                }), // body data type must match "Content-Type" header
-            }).then(() => {
-                setAlert('', `Code ${code} is now running.`)
-            }).catch(() => {
-                setAlert('', 'Error')
-            })
+        if (scheduledJobs.map((job) => job.code).includes(code)) {
+            setAlert('', `Code already running...`)
+        } else {
+            const job = schedule.scheduleJob(new Date(new Date(endDate).toLocaleString('en', { timeZone: 'Asia/Manila' })),
+                () => {
+                    const job = scheduledJobs.filter((job) => job.code === code)[0]
+                    remove(ref(db, `/codes/${job.uuid}`));
+                    scheduledJobs.filter((job) => job.code === code)[0].job.cancel()
+                    scheduledJobs = scheduledJobs.filter((job) => job.code !== code)
+                });
+            const uuid = crypto.randomUUID()
+            set(ref(db, `/codes/${uuid}`), {
+                name: desc,
+                code: code,
+                ttl: endDate
+            });
+            scheduledJobs.push({ uuid, endTime: endDate, name: desc, code: code, job })
+            setAlert('', `Code ${code} running...`)
+        }
     }
 
     return (
