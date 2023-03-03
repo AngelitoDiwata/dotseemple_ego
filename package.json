@@ -13,6 +13,7 @@
         "crypto-js": "^4.1.1",
         "express": "^4.18.2",
         "firebase": "^9.17.1",
+        "js-cookie": "^3.0.1",
         "knex": "^2.4.2",
         "mysql": "^2.18.1",
         "next": "13.2.1",
@@ -21,6 +22,8 @@
         "react": "18.2.0",
         "react-datetime-picker": "^4.2.0",
         "react-dom": "18.2.0",
+        "react-icons-kit": "^2.0.0",
+        "react-tweet-embed": "^2.0.0",
         "request-ip": "^3.3.0",
         "sweetalert": "^2.1.2",
         "validator": "^13.9.0"
