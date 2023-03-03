@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const { method, body } = req
     if (method === "GET") {
         res.send(scheduledJobs.map((job) => {
-            return { uuid: job.uuid }
+            return { uuid: job.job.nextInvocation() }
         }))
     }
     if (method === "POST") {
