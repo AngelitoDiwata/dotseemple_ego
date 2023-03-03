@@ -19,7 +19,7 @@ export default async function handler(req, res) {
         if (scheduledJobs.map((job) => job.code).includes(body.code)) {
             res.send(`Code already running...`)
         } else {
-            const job = schedule.scheduleJob(new Date(body.endTime),
+            const job = schedule.scheduleJob(new Date(new Date(body.endTime).toLocaleString('en', { timeZone: 'Asia/Manila' })),
                 () => {
                     const job = scheduledJobs.filter((job) => job.code === body.code)[0]
                     remove(ref(db, `/codes/${job.uuid}`));
