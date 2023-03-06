@@ -242,10 +242,10 @@ export default function Home() {
                         href="/feed">
                         ⦾
                     </a>
-                    <Link className='no-underline decoration-auto text-white text-xs sticky bottom-0'
+                    <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
                         href="/notFound">
                         <Icon icon={fileText} />
-                    </Link>
+                    </a>
                     <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
                         href="https://twitter.com/dotseemple">
                         <Icon icon={twitter} />
