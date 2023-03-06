@@ -59,9 +59,7 @@ export default function Home() {
                 setList((oldArray) => [...oldArray, entry]);
             }) : setList([])
             res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                if (new Date(new Date(code.ttl).toLocaleString('en', { timeZone: 'Asia/Manila' })) > new Date(new Date().toLocaleString('en', { timeZone: 'Asia/Manila' }))) {
                     setValidCodes((oldArray) => [...oldArray, code]);
-                }
             }) : setValidCodes([])
 
             return () => {
@@ -100,7 +98,7 @@ export default function Home() {
 
     const updateDatabase = (data) => {
         update(ref(db, `/data/${getTempUUID()}`), data);
-        setAlert('', `Thanks for being there, ${handle}`)
+        setAlert('', 'Point has been credited')
         setCode('')
     }
 
@@ -112,7 +110,7 @@ export default function Home() {
         const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
         if (code.trim() === '') {
             setAlert('', 'Code cannot be empty!')
-        } else if (!validCodes.map((item) => item.code).includes(code)) {
+        } else if (!validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
             setAlert('', 'Invalid code!')
         } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
             setAlert('', 'Code already claimed!')
