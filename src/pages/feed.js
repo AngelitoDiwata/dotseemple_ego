@@ -5,7 +5,7 @@ import { fileText, twitter } from 'react-icons-kit/icomoon/'
 export default function feed() {
     return (
         <div className='App w-full h-screen bg-black'>
-            <div className='w-full md:w-1/2 m-auto'>
+            <div className='w-full md:w-1/2 m-auto pb-20'>
                 <a
                     className="twitter-timeline"
                     href="https://twitter.com/dotseemple"
