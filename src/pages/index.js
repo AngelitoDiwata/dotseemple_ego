@@ -181,7 +181,6 @@ export default function Home() {
                 loginState && <div className='bg-black w-full px-2 md:px-20 mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-5 h-fit pb-32 pt-28 md:pt-16'>
                     {
                         proritizedUserList().filter((item) => item.handle.toLowerCase().includes(searchVal.toLowerCase())).map((data, ind) => {
-                            data.handle === handle && console.log(data.uuid)
                             return <a key={ind} href={`https://twitter.com/${data.handle.replaceAll('@', '')}`} className={`hover:scale-110 transition-all h-full w-full px-5 py-3 m-auto flex flex-col space-x-5 items-center justify-center text-white my-5 bg-black rounded-full`}>
                                 <div className="w-full flex flex-row items-center justify-center space-x-2">
                                     <span className='no-underline decoration-auto text-white text-xs font-semibold'
