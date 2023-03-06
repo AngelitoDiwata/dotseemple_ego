@@ -71,7 +71,7 @@ export default function DotSeempleCodes() {
                 <input type="datetime-local" className="w-full md:w-1/4 border border-white bg-black rounded-lg outline-white px-3 py-1" onChange={(e) => changeHandler(e, setEndDate)} defaultValue={endDate} />
                 <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={submit}>submit</button>
             </div>
-            <div className='w-full h-screen bg-black flex flex-col items-center justify-center space-y-5'>
+            <div className='w-full h-screen bg-black flex flex-col items-center justify-start md:items-start md:grid md:grid-cols-3 md:justify-center space-y-5 mx-10 my-10 gap-2'>
                 {
                     validCodes.length > 0 ? validCodes.map((code) =>  <CodeCard key={code.code} name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
                 }
