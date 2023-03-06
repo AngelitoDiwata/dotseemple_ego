@@ -154,7 +154,7 @@ export default function Home() {
                 </div>
             }
             {
-                loginState && !isVerified() && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-col items-center justify-center space-y-5'>
+                loginState && !isVerified() && <div className='absolute w-4/5 h-screen m-auto bg-black z-50 flex flex-col items-center justify-center space-y-5'>
                     <div className='w-full md:w-1/2 lg:w-1/4 m-auto flex flex-col items-center justify-center space-y-3'>
                         <span className='self-start'>Add your details, {handle}</span>
                         <input placeholder="Wallet Address" className="text-white w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={walletAddress} onChange={(e) => changeHandler(e, setWalletAddress)} />
