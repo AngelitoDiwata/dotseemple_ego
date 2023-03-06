@@ -3,11 +3,6 @@ import { React, useState, useEffect } from 'react'
 import { db } from '@/firebase'
 import { set, ref, onValue, remove } from "firebase/database";
 import swal from 'sweetalert';
-import schedule from 'node-schedule'
-
-let scheduledJobs = [
-
-]
 
 export default function DotSeempleCodes() {
     const [validCodes, setValidCodes] = useState([])
@@ -51,23 +46,15 @@ export default function DotSeempleCodes() {
         } else if (code.trim().length === 0 || desc.trim().length === 0) {
             setAlert('', `Please provide valid code values.`)
         }
-        else if (scheduledJobs.map((job) => job.code).includes(code)) {
+        else if (validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
             setAlert('', `Code already running...`)
         } else {
-            const job = schedule.scheduleJob(new Date(new Date(endDate).toLocaleString('en', { timeZone: 'Asia/Manila' })),
-                () => {
-                    const job = scheduledJobs.filter((job) => job.code === code)[0]
-                    remove(ref(db, `/codes/${job.uuid}`));
-                    scheduledJobs.filter((job) => job.code === code)[0].job.cancel()
-                    scheduledJobs = scheduledJobs.filter((job) => job.code !== code)
-                });
             const uuid = crypto.randomUUID()
             set(ref(db, `/codes/${uuid}`), {
                 name: desc,
                 code: code,
                 ttl: endDate
             });
-            scheduledJobs.push({ uuid, endTime: endDate, name: desc, code: code, job })
             setAlert('', `Code ${code} running...`)
             setCode('')
             setDesc('')
@@ -86,7 +73,7 @@ export default function DotSeempleCodes() {
             </div>
             <div className='w-full h-screen bg-black flex flex-col items-center justify-center space-y-5'>
                 {
-                    validCodes.length > 0 ? validCodes.map((code) => <CodeCard key={code.code} name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
+                    validCodes.length > 0 ? validCodes.map((code) =>  <CodeCard key={code.code} name={code.name} code={code.code} date={code.ttl} />) : <span>Wow, O_o such empty.</span>
                 }
             </div>
         </div>

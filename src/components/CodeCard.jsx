@@ -6,7 +6,7 @@ export default function CodeCard({name, code, date}) {
     
     useEffect(() => {
         setInterval(() => {
-            setTTL(msToTime(Math.abs(new Date(date) - new Date())) )
+            setTTL(msToTime(new Date(date) - new Date()) )
         }, 1000);
     }, [])
 
@@ -21,7 +21,7 @@ export default function CodeCard({name, code, date}) {
         else return days + " Days remaining"
       }
     return (
-        <div className='w-3/4 flex flex-row items-center justify-around rounded-md bg-neutral-800'>
+        !TTL.toString().includes('-') ? <div className={`w-3/4 flex flex-row items-center justify-around rounded-md bg-neutral-800`}>
             <span className='p-5 text-lg'>
                 {name}
             </span>
@@ -33,6 +33,6 @@ export default function CodeCard({name, code, date}) {
             <span>
                 {TTL}
             </span>
-        </div>
+        </div> : null
     )
 }
