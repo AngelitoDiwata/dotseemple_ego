@@ -40,7 +40,7 @@ export default function Home() {
     const onLogin = (cond = true) => {
         if (handle === undefined || handle.trim().length === 0) {
             setAlert('', 'Oh, come on...')
-        }else if (cond && list.map((item) => item.handle.toLowerCase()).includes(handle.toLowerCase())) {
+        } else if (cond && list.map((item) => item.handle.toLowerCase()).includes(handle.toLowerCase())) {
             Cookies.set('handle', handle, { sameSite: 'None', secure: true })
             setLoginState(true)
         } else {
@@ -52,13 +52,14 @@ export default function Home() {
         onValue(ref(db), (snapshot) => {
             setList([]);
             const res = snapshot.val();
-            setLoginState(Object.values(res.data).map((item) => item.handle).includes(Cookies.get('handle')))
-            setHandle(Cookies.get('handle'))
+            setHandle(Cookies.get('handle') || '')
+            if (handle !== '') {setLoginState(Object.values(res.data).map((item) => item.handle.toLowerCase()).includes(Cookies.get('handle').toLowerCase()))}
+
             res.data !== undefined ? Object.values(res.data).map((entry) => {
                 setList((oldArray) => [...oldArray, entry]);
             }) : setList([])
             res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                if (new Date(code.ttl) > new Date()) {
+                if (new Date(new Date(code.ttl).toLocaleString('en', { timeZone: 'Asia/Manila' })) > new Date(new Date().toLocaleString('en', { timeZone: 'Asia/Manila' }))) {
                     setValidCodes((oldArray) => [...oldArray, code]);
                 }
             }) : setValidCodes([])
@@ -77,32 +78,16 @@ export default function Home() {
     }
 
     const handleCheck = () => {
-        if (editMode()) {
-            const listCheck = list.filter((item) => item.handle === handle)
-            let updateModel
-            try {
-                updateModel = {
-                    handle: listCheck[0].handle,
-                    connections: listCheck[0].connections + 1,
-                    collections: [...listCheck[0].collections, code],
-                    uuid: getTempUUID()
-                }
-            } catch (_) {
-                updateModel = {
-                    handle: listCheck[0].handle,
-                    connections: listCheck[0].connections + 1,
-                    collections: [code],
-                    uuid: getTempUUID()
-                }
-            }
-            updateDatabase(updateModel)
+        const listCheck = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())
+        const updateModel = {
+            handle: listCheck[0].handle,
+            connections: listCheck[0].connections + 1,
+            collections: listCheck[0].hasOwnProperty('collections') ? [...listCheck[0].collections, code] : [code],
+            uuid: getTempUUID()
         }
+        updateDatabase(updateModel)
     }
 
-    const editMode = () => {
-        const listCheck = list.filter((item) => item.handle === handle)
-        return listCheck.length > 0
-    }
 
     const getTempUUID = () => {
         const listCheck = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())
@@ -116,38 +101,25 @@ export default function Home() {
     const updateDatabase = (data) => {
         update(ref(db, `/data/${getTempUUID()}`), data);
         setAlert('', `Thanks for being there, ${handle}`)
-        setHandle('')
         setCode('')
     }
-
-    const writeToDatabase = (data) => {
-        set(ref(db, `/data/${data.uuid}`), data);
-        setAlert('', `Thanks for being there, ${handle}`)
-        setHandle('')
-        setCode('')
-    };
 
     const changeHandler = (e, handler) => {
         handler(e.target.value)
     }
 
     const validateEntry = () => {
-        try {
-            if (handle.split('')[0] !== '@') {
-                setAlert('Error', 'Invalid user handle!')
-            }
-            else if (handle.trim() === '' || code.trim() === '') {
-                setAlert('Error', 'Handle or code cannot be empty!')
-            } else if (!validCodes.map((item) => item.code).includes(code)) {
-                setAlert('Error', 'Invalid code!')
-            } else if (list.filter((item) => item.handle === handle)[0].collections.includes(code)) {
-                setAlert('Error', 'Code already claimed!')
-            } else {
-                handleCheck()
-            }
-        } catch (_) {
+        const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
+        if (code.trim() === '') {
+            setAlert('', 'Code cannot be empty!')
+        } else if (!validCodes.map((item) => item.code).includes(code)) {
+            setAlert('', 'Invalid code!')
+        } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
+            setAlert('', 'Code already claimed!')
+        } else {
             handleCheck()
         }
+
     }
 
     const getUserData = () => {
@@ -168,7 +140,7 @@ export default function Home() {
             userData.wallet = walletAddress
             update(ref(db, `/data/${userData.uuid}`), userData);
             setLoginState(true),
-            setHandle(handle)
+                setHandle(handle)
             setAlert('', `Welcome, ${handle}`)
         }
     }
@@ -208,7 +180,7 @@ export default function Home() {
             {
                 loginState && <div className='bg-black w-full px-2 md:px-20 mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-5 h-fit pb-32 pt-28 md:pt-16'>
                     {
-                        proritizedUserList().filter((item) => item.handle.includes(searchVal)).map((data, ind) => {
+                        proritizedUserList().filter((item) => item.handle.toLowerCase().includes(searchVal.toLowerCase())).map((data, ind) => {
                             data.handle === handle && console.log(data.uuid)
                             return <a key={ind} href={`https://twitter.com/${data.handle.replaceAll('@', '')}`} className={`hover:scale-110 transition-all h-full w-full px-5 py-3 m-auto flex flex-col space-x-5 items-center justify-center text-white my-5 bg-black rounded-full`}>
                                 <div className="w-full flex flex-row items-center justify-center space-x-2">
@@ -247,7 +219,7 @@ export default function Home() {
                         <Icon icon={fileText} />
                     </a>
                     <a className='no-underline decoration-auto text-white text-xs sticky bottom-0'
-                        href="https://twitter.com/dotseemple">
+                        href="https://twitter.com/dotseemple" target="_blank">
                         <Icon icon={twitter} />
                     </a>
                 </footer >

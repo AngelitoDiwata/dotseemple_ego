@@ -37,7 +37,7 @@ export default function DotSeempleCodes() {
             const res = snapshot.val();
             if (res) {
                 res.codes !== undefined ? Object.values(res.codes).forEach((code) => {
-                    if (new Date(code.ttl) > new Date()) {
+                    if (new Date(new Date(code.ttl).toLocaleString('en', { timeZone: 'Asia/Manila' })) > new Date(new Date().toLocaleString('en', { timeZone: 'Asia/Manila' }))) {
                         setValidCodes((oldArray) => [...oldArray, code]);
                     }
                 }) : setValidCodes([])
