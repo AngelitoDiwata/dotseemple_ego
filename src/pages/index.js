@@ -187,8 +187,8 @@ export default function Home() {
                 loginState && !isVerified() && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-col items-center justify-center space-y-5'>
                     <div className='w-full md:w-1/2 lg:w-1/4 m-auto flex flex-col items-center justify-center space-y-3'>
                         <span className='self-start'>Add your details, {handle}</span>
-                        <input placeholder="Wallet Address" className="text-white w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={walletAddress} onChange={(e) => changeHandler(e, setWalletAddress)} />
-                        <input placeholder="Email Address" className="text-white w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={emailAddress} onChange={(e) => changeHandler(e, setEmailAddress)} />
+                        <input placeholder="Wallet Address" className="text-white w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={walletAddress} onChange={(e) => changeHandler(e, setWalletAddress)} />
+                        <input placeholder="Email Address" className="text-white w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={emailAddress} onChange={(e) => changeHandler(e, setEmailAddress)} />
                         <button onClick={submitDetails} className='text-xl border px-3 py-2 rounded-lg mb-2 hover:scale-110 self-end transition-all'>
                             Continue
                         </button>
