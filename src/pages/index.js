@@ -177,8 +177,8 @@ export default function Home() {
         <div className='App w-full h-screen bg-black'>
             {
                 !loginState && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-row items-center justify-center space-x-5'>
-                    <input placeholder="Who are you?" className="w-1/2 md:w-80 transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={handle} onChange={(e) => changeHandler(e, setHandle)} />
-                    <button onClick={onLogin} className='text-5xl mb-2 hover:scale-110 transition-all'>
+                    <input placeholder="Who are you?" className="text-white w-1/2 md:w-80 transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={handle} onChange={(e) => changeHandler(e, setHandle)} />
+                    <button onClick={onLogin} className='text-5xl text-white mb-2 hover:scale-110 transition-all'>
                         ⦿
                     </button>
                 </div>
@@ -187,8 +187,8 @@ export default function Home() {
                 loginState && !isVerified() && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-col items-center justify-center space-y-5'>
                     <div className='w-full md:w-1/2 lg:w-1/4 m-auto flex flex-col items-center justify-center space-y-3'>
                         <span className='self-start'>Add your details, {handle}</span>
-                        <input placeholder="Wallet Address" className="w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={walletAddress} onChange={(e) => changeHandler(e, setWalletAddress)} />
-                        <input placeholder="Email Address" className="w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={emailAddress} onChange={(e) => changeHandler(e, setEmailAddress)} />
+                        <input placeholder="Wallet Address" className="text-white w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={walletAddress} onChange={(e) => changeHandler(e, setWalletAddress)} />
+                        <input placeholder="Email Address" className="text-white w-1/2 md:w-full transition-all border border-white bg-black rounded-lg hover:outline-white p-2" value={emailAddress} onChange={(e) => changeHandler(e, setEmailAddress)} />
                         <button onClick={submitDetails} className='text-xl border px-3 py-2 rounded-lg mb-2 hover:scale-110 self-end transition-all'>
                             Continue
                         </button>
