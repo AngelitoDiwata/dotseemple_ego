@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react'
 import { set, ref, onValue, update } from "firebase/database";
 import { fileText, twitter } from 'react-icons-kit/icomoon/'
 import { Icon } from 'react-icons-kit'
-import { db } from '@/firebase-dev'
+import { db } from '@/firebase'
 import swal from 'sweetalert';
 import Cookies from 'js-cookie';
 import Web3 from 'web3';

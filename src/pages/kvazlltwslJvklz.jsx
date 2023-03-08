@@ -1,6 +1,6 @@
 import CodeCard from '@/components/CodeCard'
 import { React, useState, useEffect } from 'react'
-import { db } from '@/firebase-dev'
+import { db } from '@/firebase'
 import { set, ref, onValue, remove } from "firebase/database";
 import swal from 'sweetalert';
 
