@@ -11,18 +11,6 @@ const firebaseConfig_prod = {
     appId: "1:915461456977:web:b91140403ed642f5326470"
 };
 
-const firebaseConfig_dev = {
-    apiKey: "AIzaSyB2ME9ixot8Gpi_5CV4LpGN1b6rLEid-dM",
-    authDomain: "dotseemple-dev.firebaseapp.com",
-    databaseURL: "https://dotseemple-dev-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "dotseemple-dev",
-    storageBucket: "dotseemple-dev.appspot.com",
-    messagingSenderId: "276412099994",
-    appId: "1:276412099994:web:e288744d41f03c89fede23",
-    measurementId: "G-0Q5PXN96WY"
-};
-
-
 // Initialize Firebase
-const app = initializeApp(process.env.SERVER === 'PROD' ? firebaseConfig_prod : firebaseConfig_dev);
+const app = initializeApp(firebaseConfig_prod);
 export const db = getDatabase(app)
