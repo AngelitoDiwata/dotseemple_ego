@@ -74,47 +74,6 @@ export default function Home() {
         ];
     }
 
-    const validateEntry = () => {
-        const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
-        if (code.trim() === '') {
-            setAlert('', 'Code cannot be empty!')
-        } else if (!validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
-            setAlert('', 'Sorry. code is either invalid/expired.')
-        } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
-            setAlert('', 'Code already claimed!')
-        } else {
-            handleCheck()
-        }
-
-    }
-
-    const handleCheck = () => {
-        const listCheck = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())
-        const updateModel = {
-            handle: listCheck[0].handle,
-            connections: listCheck[0].connections + 1,
-            collections: listCheck[0].hasOwnProperty('collections') ? [...listCheck[0].collections, code] : [code],
-            uuid: getTempUUID()
-        }
-        updateDatabase(updateModel)
-    }
-
-
-    const getTempUUID = () => {
-        const listCheck = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())
-        try {
-            return listCheck[0].uuid
-        } catch (_) {
-            return ''
-        }
-    }
-
-    const updateDatabase = (data) => {
-        update(ref(db, `/data/${getTempUUID()}`), data);
-        setAlert('', 'Valid code. Dot has been credited. Thanks')
-        setCode('')
-    }
-
     const changeHandler = (e, handler) => {
         handler(() => e.target.value)
     }
@@ -134,7 +93,12 @@ export default function Home() {
                     </div>
                 }
                 {
-                    loginState && <HeadForm onSearch={(e) => fetchDB(e)} validCodes={validCodes} onValidate={validateEntry}/>
+                    loginState && <HeadForm
+                        onSearch={(e) => fetchDB(e)}
+                        validCodes={validCodes}
+                        list={list}
+                        handle={handle}
+                    />
                 }
                 {
                     loginState && <div className='bg-black w-full px-2 md:px-20 mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-5 h-fit pb-32 pt-44 md:pt-16'>
