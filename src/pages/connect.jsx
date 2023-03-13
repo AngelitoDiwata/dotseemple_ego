@@ -12,7 +12,7 @@ export default function Home() {
     const [code, setCode] = useState("")
     const [validCodes, setValidCodes] = useState([])
     const [loginState, setLoginState] = useState(false)
-    const [searchVal, setSearchVal] = useState('')
+    const [searchVal, setSearchVal] = useState("")
 
     useEffect(() => {
         fetchDB()
@@ -115,7 +115,7 @@ export default function Home() {
     }
 
     const changeHandler = (e, handler) => {
-        handler(e.target.value)
+        handler(() => e.target.value)
     }
 
     return (
