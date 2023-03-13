@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database"
-const firebaseConfig = {
+
+const firebaseConfig_prod = {
     apiKey: "AIzaSyCXNxwO0tTSgZB18291RRiR-c6CJIaB98k",
     authDomain: "dotseemple-50203.firebaseapp.com",
     databaseURL: "https://dotseemple-50203-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -11,5 +12,5 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig_prod);
 export const db = getDatabase(app)
