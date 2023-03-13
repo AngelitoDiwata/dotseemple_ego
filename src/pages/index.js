@@ -4,16 +4,15 @@ import { fileText, twitter } from 'react-icons-kit/icomoon/'
 import { Icon } from 'react-icons-kit'
 import { db } from '@/firebase'
 import swal from 'sweetalert';
-import Cookies from 'js-cookie';
-import Web3 from 'web3';
+// import Cookies from 'js-cookie';
 
 export default function Home() {
     const [list, setList] = useState([])
     const [handle, setHandle] = useState("")
     const [code, setCode] = useState("")
-    const [walletAddress, setWalletAddress] = useState('')
-    const [emailAddress, setEmailAddress] = useState('')
-    const [connections, setConnections] = useState(1)
+    // const [walletAddress, setWalletAddress] = useState('')
+    // const [emailAddress, setEmailAddress] = useState('')
+    // const [connections, setConnections] = useState(1)
     const [validCodes, setValidCodes] = useState([])
     const [loginState, setLoginState] = useState(false)
     const [searchVal, setSearchVal] = useState('')
@@ -33,16 +32,17 @@ export default function Home() {
             });
     }
 
-    const isVerified = () => {
-        return list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase() && item.wallet.length !== 0 && item.email.length !== 0).length > 0
-    }
+    // const isVerified = () => {
+    //     return list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase() && item.wallet.length !== 0 && item.email.length !== 0).length > 0
+    // }
 
     const onLogin = (cond = true) => {
         if (handle === undefined || handle.trim().length === 0) {
             setAlert('', 'Oh, come on...')
         } else if (cond && list.map((item) => item.handle.toLowerCase()).includes(handle.toLowerCase())) {
-            Cookies.set('handle', handle, { sameSite: 'None', secure: true })
             setLoginState(true)
+            setHandle(handle)
+            setAlert('', `Welcome, ${handle}`)
         } else {
             setAlert('', 'ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴘᴀʀᴛ ᴏꜰ ᴛʜᴇ ᴄɪʀᴄʟᴇ -- ʏᴇᴛ.')
         }
@@ -51,28 +51,40 @@ export default function Home() {
     useEffect(() => {
         onValue(ref(db), (snapshot) => {
             setList([]);
+            setValidCodes([])
             const res = snapshot.val();
-            setHandle(Cookies.get('handle') || '')
-            if (handle !== '') {setLoginState(Object.values(res.data).map((item) => item.handle.toLowerCase()).includes(Cookies.get('handle').toLowerCase()))}
-
-            res.data !== undefined ? Object.values(res.data).map((entry) => {
-                setList((oldArray) => [...oldArray, entry]);
-            }) : setList([])
-            res.codes !== undefined ? Object.values(res.codes).map((code) => {
+            try {
+                res.data !== undefined ? Object.values(res.data).map((entry) => {
+                    setList((oldArray) => [...oldArray, entry]);
+                }) : setList([])
+                res.codes !== undefined ? Object.values(res.codes).map((code) => {
                     setValidCodes((oldArray) => [...oldArray, code]);
-            }) : setValidCodes([])
-
-            return () => {
-                Cookies.remove('handle')
+                }) : setValidCodes([])
+            } catch (_) {
+                
             }
         });
     }, []);
 
     const proritizedUserList = () => {
         return [
-            ...list.filter((item) => item.handle.toLowerCase() === Cookies.get('handle').toLowerCase()),
-            ...list.filter((item) => item.handle.toLowerCase() !== Cookies.get('handle').toLowerCase())
+            ...list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase()),
+            ...list.filter((item) => item.handle.toLowerCase() !== handle.toLowerCase())
         ];
+    }
+
+    const validateEntry = () => {
+        const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
+        if (code.trim() === '') {
+            setAlert('', 'Code cannot be empty!')
+        } else if (!validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
+            setAlert('', 'Invalid code!')
+        } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
+            setAlert('', 'Code already claimed!')
+        } else {
+            handleCheck()
+        }
+
     }
 
     const handleCheck = () => {
@@ -106,42 +118,29 @@ export default function Home() {
         handler(e.target.value)
     }
 
-    const validateEntry = () => {
-        const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
-        if (code.trim() === '') {
-            setAlert('', 'Code cannot be empty!')
-        } else if (!validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
-            setAlert('', 'Invalid code!')
-        } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
-            setAlert('', 'Code already claimed!')
-        } else {
-            handleCheck()
-        }
 
-    }
+    // const getUserData = () => {
+    //     return list.filter((item) => {
+    //         return item.handle.toLowerCase() === Cookies.get('handle').toLowerCase()
+    //     })[0]
+    // }
 
-    const getUserData = () => {
-        return list.filter((item) => {
-            return item.handle.toLowerCase() === Cookies.get('handle').toLowerCase()
-        })[0]
-    }
+    // const submitDetails = () => {
+    //     if (!Web3.utils.isAddress(walletAddress)) {
+    //         setAlert('', 'Invalid Wallet Address.')
+    //     } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress) === false) {
+    //         setAlert('', 'Invalid Email Address.')
+    //         return (true)
+    //     } else {
+    //         const userData = getUserData()
+    //         userData.email = emailAddress
+    //         userData.wallet = walletAddress
+    //         update(ref(db, `/data/${userData.uuid}`), userData);
+    //         setLoginState(true),
+    //             setHandle(handle)
 
-    const submitDetails = () => {
-        if (!Web3.utils.isAddress(walletAddress)) {
-            setAlert('', 'Invalid Wallet Address.')
-        } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(emailAddress) === false) {
-            setAlert('', 'Invalid Email Address.')
-            return (true)
-        } else {
-            const userData = getUserData()
-            userData.email = emailAddress
-            userData.wallet = walletAddress
-            update(ref(db, `/data/${userData.uuid}`), userData);
-            setLoginState(true),
-                setHandle(handle)
-            setAlert('', `Welcome, ${handle}`)
-        }
-    }
+    //     }
+    // }
 
     return (
         <div className='App w-full h-screen bg-black'>
@@ -153,7 +152,7 @@ export default function Home() {
                     </button>
                 </div>
             }
-            {
+            {/* {
                 loginState && !isVerified() && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-col items-center justify-center space-y-5'>
                     <div className='w-4/5 md:w-1/2 lg:w-1/4 m-auto flex flex-col items-center justify-center space-y-3'>
                         <span className='self-start'>Add your details, {handle}</span>
@@ -164,10 +163,10 @@ export default function Home() {
                         </button>
                     </div>
                 </div>
-            }
+            } */}
             {
                 loginState && <div className="absolute z-30 bg-black top-0 w-full m-auto flex flex-col md:flex-row items-start md:items-end justify-between py-5 space-y-3 md:space-x-3 space-x-0 md:space-y-0 px-10">
-                    <input placeholder="Search for a handle" className="w-full md:w-1/6 self-start border border-white bg-black rounded-lg outline-white px-3 py-1" value={searchVal} onChange={(e) => changeHandler(e, setSearchVal)} />
+                    <input placeholder="🔍 Search for a handle" className="w-full md:w-1/6 self-start border border-white bg-black rounded-lg outline-white px-3 py-1" value={searchVal} onChange={(e) => changeHandler(e, setSearchVal)} />
                     <div className='w-full md:w-1/4 flex flex-row items-center justify-center space-x-3'>
                         <input placeholder="CODE" className="w-full md:w-2/3 border border-white bg-black rounded-lg outline-white px-3 py-1" value={code} onChange={(e) => changeHandler(e, setCode)} />
                         <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={validateEntry}>submit</button>
