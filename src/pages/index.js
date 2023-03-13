@@ -14,6 +14,24 @@ export default function Home() {
     const [loginState, setLoginState] = useState(false)
     const [searchVal, setSearchVal] = useState('')
 
+    useEffect(() => {
+        onValue(ref(db), (snapshot) => {
+            setList([]);
+            setValidCodes([])
+            const res = snapshot.val();
+            try {
+                res.data !== undefined ? Object.values(res.data).map((entry) => {
+                    setList((oldArray) => [...oldArray, entry]);
+                }) : setList([])
+                res.codes !== undefined ? Object.values(res.codes).map((code) => {
+                    setValidCodes((oldArray) => [...oldArray, code]);
+                }) : setValidCodes([])
+            } catch (_) {
+
+            }
+        });
+    }, []);
+
     const setAlert = (title, message) => {
         swal({
             title: title,
@@ -41,23 +59,6 @@ export default function Home() {
         }
     }
 
-    useEffect(() => {
-        onValue(ref(db), (snapshot) => {
-            setList([]);
-            setValidCodes([])
-            const res = snapshot.val();
-            try {
-                res.data !== undefined ? Object.values(res.data).map((entry) => {
-                    setList((oldArray) => [...oldArray, entry]);
-                }) : setList([])
-                res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                    setValidCodes((oldArray) => [...oldArray, code]);
-                }) : setValidCodes([])
-            } catch (_) {
-
-            }
-        });
-    }, []);
 
     const proritizedUserList = () => {
         return [
