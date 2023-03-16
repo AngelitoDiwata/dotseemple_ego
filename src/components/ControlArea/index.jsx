@@ -69,7 +69,7 @@ export default function ControlArea({ userData }) {
                 </div>
                 <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input input-bordered border-white bg-black w-full max-w-xs" />
             </div>
-            <button onClick={validateEntry} className="btn btn-outline md:btn-lg w-fit">Submit</button>
+            <button onClick={validateEntry} className="btn outline-dotted text-white outline-white btn-outline md:btn-lg w-fit">Submit</button>
         </div>
     )
 }

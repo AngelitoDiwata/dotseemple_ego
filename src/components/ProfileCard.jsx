@@ -29,12 +29,12 @@ export default function ProfileCard({ profileDetails, profileMode = false }) {
                                 'overflowWrap': 'break-word',
                                 'wordWrap': 'break-word',
                                 'hyphens': 'auto'
-                            }} className='px-5 text-3xl mx-auto h-full overflow-auto break-all w-full leading-3 text-left mb-5 font-black tracking-widest'>{
-                                    (<div>
+                            }} className='px-5 text-3xl text-white mx-auto h-full overflow-y-scroll break-all w-11/12 leading-3 text-left mb-5 font-black tracking-widest'>{
+                                    (<div className='w-full flex flex-wrap flex-row items-start justify-start'>
                                         {
                                             profileDetails.collections ? profileDetails.collections.map(() => {
-                                                return '.'
-                                            }).join('') : ''
+                                                return <span className='font-black text-3xl -my-2'>.</span>
+                                            }) : ''
                                         }
                                     </div>)
                                 }</span>
