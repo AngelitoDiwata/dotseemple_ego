@@ -49,7 +49,7 @@ export default function Home() {
     }
 
     const onLogin = (cond = true) => {
-        if (handle === undefined || handle.trim().length === 0) {
+        if (handle === undefined || handle.trim().length === 0 || handle === '') {
             setAlert('', 'Oh, come on...')
         } else if (cond && list.map((item) => item.handle.toLowerCase()).includes(handle.toLowerCase())) {
             setLoginState(true)
