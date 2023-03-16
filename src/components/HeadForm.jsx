@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { set, ref, onValue, update } from "firebase/database";
 import { db } from '@/firebase'
 import swal from 'sweetalert';
@@ -6,6 +6,10 @@ import swal from 'sweetalert';
 export default function HeadForm({ onSearch, list, handle }) {
     const [searchVal, setSearchVal] = useState("")
     const [code, setCode] = useState("")
+
+    useEffect(() => {
+        validCodes()
+    }, [list])
 
     const setAlert = (title, message) => {
         swal({
