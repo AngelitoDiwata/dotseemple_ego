@@ -1,17 +1,9 @@
-import { React, useEffect, useState } from 'react'
+import { React } from 'react'
 import { Icon } from 'react-icons-kit'
 import { fileText, twitter } from 'react-icons-kit/icomoon/'
-import { useRouter } from 'next/router'
-import Cookies from 'js-cookie';
 import Head from 'next/head';
 
 export default function feed() {
-    const router = useRouter()
-    useEffect(() => {
-        if (!Cookies.get('handle')) {
-            router.push('/')
-        }
-    })
     return (
         <>
             <Head>

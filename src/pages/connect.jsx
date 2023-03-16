@@ -18,8 +18,8 @@ export default function Home() {
         fetchDB()
     }, []);
 
-    const fetchDB = (searchValue = '') => {
-        onValue(ref(db), (snapshot) => {
+    const fetchDB = async (searchValue = '') => {
+        await onValue(ref(db), (snapshot) => {
             setList([]);
             setValidCodes([])
             const res = snapshot.val();
@@ -65,14 +65,6 @@ export default function Home() {
         }
     }
 
-
-    const proritizedUserList = () => {
-        return [
-            ...list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase()),
-            ...list.filter((item) => item.handle.toLowerCase() !== handle.toLowerCase())
-        ];
-    }
-
     const changeHandler = (e, handler) => {
         handler(() => e.target.value)
     }
@@ -84,7 +76,7 @@ export default function Home() {
             </Head>
             <div className='App w-full h-screen bg-black'>
                 {
-                    !loginState && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-row items-center justify-center space-x-5'>
+                    !loginState && list !== [] && <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-row items-center justify-center space-x-5'>
                         <input placeholder="Who are you?" className="text-white tracking-wider text-lg w-1/2 outline-none md:w-80 transition-all border border-white bg-black rounded-lg hover:outline-white px-3 py-2" value={handle} onChange={(e) => changeHandler(e, setHandle)} />
                         <button onClick={onLogin} className='text-5xl text-white outline-none hover:scale-110 transition-all'>
                             ⦿
@@ -92,7 +84,7 @@ export default function Home() {
                     </div>
                 }
                 {
-                    loginState && <HeadForm
+                    loginState && list !== [] && <HeadForm
                         onSearch={(e) => fetchDB(e)}
                         validCodes={validCodes}
                         list={list}
@@ -100,10 +92,10 @@ export default function Home() {
                     />
                 }
                 {
-                    loginState && <DotGrid proritizedUserList={proritizedUserList} handle={handle} />
+                    loginState && list !== [] && <DotGrid list={list} handle={handle} />
                 }
                 {
-                    loginState && <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center space-x-10 py-5">
+                    loginState && list !== [] && <footer className="absolute bg-black bottom-0 w-full flex flex-row items-center justify-center space-x-10 py-5">
                         <a className='no-underline decoration-auto text-white text-2xl sticky bottom-0'
                             href="/connect">
                             ⦿
