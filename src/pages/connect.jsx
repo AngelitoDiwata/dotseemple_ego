@@ -33,7 +33,7 @@ export default function connect() {
             if (snapshot.val() !== null) {
                 const user = Object.values(snapshot.val())
                 setLoginState(user.length > 0)
-                setAlert('', `ᴡᴇʟᴄᴏᴍᴇ, ${handle}`)
+                setAlert('welcome', `loading profile for ${handle}...`)
                 setUser(user[0])
             } else {
                 setAlert('', 'ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴘᴀʀᴛ ᴏꜰ ᴛʜᴇ ᴄɪʀᴄʟᴇ -- ʏᴇᴛ.')
@@ -47,7 +47,8 @@ export default function connect() {
             text: message,
             timer: 2500,
             showCancelButton: false,
-            button: false
+            button: false,
+            background: "black"
         }).then(
             function () { },
             function (dismiss) {
@@ -56,9 +57,9 @@ export default function connect() {
             });
     }
     return (
-        <div className="bg-black w-full h-fit flex flex-col items-center justify-between">
+        <div className="bg-neutral-900 w-full h-fit flex flex-col items-center justify-between">
             {
-                loginState === false ? <div className='absolute w-full h-screen m-auto bg-black z-50 flex flex-row items-center justify-center space-x-5'>
+                loginState === false ? <div className='absolute w-full h-screen m-auto bg-neutral-900 z-50 flex flex-row items-center justify-center space-x-5'>
                     <input placeholder="Who are you?" className="text-white tracking-wider text-lg w-2/3 outline-none md:w-80 transition-all border border-white bg-black rounded-lg hover:outline-white px-3 py-2" value={handle} onChange={(e) => setHandle(e.target.value)} />
                     <button onClick={onLogin} className='text-5xl text-white outline-none hover:scale-110 transition-all'>
                         ⦿
