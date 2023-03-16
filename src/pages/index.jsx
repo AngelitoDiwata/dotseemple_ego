@@ -11,7 +11,7 @@ export default function index() {
                 <div className="card-body">
                     <span className="card-title text-white font-thin flex flex-col items-center justify-center tracking-widest leading-6 text-justify">
                         <span className='tracking-widest text-neutral-200 font-light text-sm text-center indent-5'>Seemple-site is under scheduled maintainance. dot be back shortly.</span>
-                        <span className='tracking-widest text-neutral-400 font-light text-xs'> ᴍᴇᴀɴᴡʜɪʟᴇ, ʜᴇʀᴇ'ꜱ ꜰᴏʀ ʙʀᴇᴀᴋꜰᴀꜱᴛ:</span>
+                        <span className='tracking-widest text-neutral-400 font-light text-center text-xs'> ᴍᴇᴀɴᴡʜɪʟᴇ, ʜᴇʀᴇ'ꜱ ꜰᴏʀ ʙʀᴇᴀᴋꜰᴀꜱᴛ:</span>
                     </span>
                     <a className="text-center font-thin hover:scale-110 transition-all text-sm text-white hover:underline" href="https://bit.ly/scratch-paper" target="_blank">bit.ly/scratch-paper</a>
                 </div>
