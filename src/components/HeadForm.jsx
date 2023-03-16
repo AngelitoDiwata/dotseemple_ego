@@ -3,7 +3,7 @@ import { set, ref, onValue, update } from "firebase/database";
 import { db } from '@/firebase'
 import swal from 'sweetalert';
 
-export default function HeadForm({ onSearch, validCodes, list, handle }) {
+export default function HeadForm({ onSearch, list, handle }) {
     const [searchVal, setSearchVal] = useState("")
     const [code, setCode] = useState("")
 
@@ -22,11 +22,26 @@ export default function HeadForm({ onSearch, validCodes, list, handle }) {
             });
     }
 
+    const validCodes = () => {
+        let codes = []
+            onValue(ref(db), (snapshot) => {
+                const res = snapshot.val();
+                try {
+                    res.codes !== undefined ? Object.values(res.codes).map((code) => {
+                        codes.push(code)
+                    }) : codes = []
+                } catch (_) {
+                    codes = []
+                }
+            });
+            return codes
+    }
+
     const validateEntry = () => {
         const listItem = list.filter((item) => item.handle.toLowerCase() === handle.toLowerCase())[0]
         if (code.trim() === '') {
             setAlert('', 'Code cannot be empty!')
-        } else if (!validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
+        } else if (!validCodes().filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
             setAlert('', 'Sorry. code is either invalid/expired.')
         } else if (listItem.hasOwnProperty('collections') && listItem.collections.includes(code)) {
             setAlert('', 'Code already claimed!')
@@ -73,7 +88,7 @@ export default function HeadForm({ onSearch, validCodes, list, handle }) {
                 <button className="w-1/2 md:w-full lg:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={() => onSearch(searchVal)}>Search</button>
             </div>
             <div className='w-full md:w-2/3 lg:w-1/3 flex flex-col md:flex-row items-center justify-end space-x-0 space-y-3 md:space-x-2 md:space-y-0'>
-                <span className='w-1/2 text-xs text-white'>Active Codes: <span className='text-xl font-black'>{validCodes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).length} </span> </span>
+                <span className='w-1/2 text-xs text-white'>Active Codes: <span className='text-xl font-black'>{validCodes().filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).length} </span> </span>
                 <input placeholder="CODE" className="text-white w-full md:w-2/3 border border-white bg-black rounded-lg outline-white px-3 py-2" value={code} onChange={(e) => changeHandler(e, setCode)} />
                 <button className="w-full md:w-20 hover:scale-110 transition-all font-semibold border hover:font-neutral-900 hover:border-2 border-white bg-black rounded-lg outline-white px-3 py-1 text-white" onClick={validateEntry}>submit</button>
             </div>

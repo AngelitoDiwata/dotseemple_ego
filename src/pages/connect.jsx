@@ -11,7 +11,6 @@ import DotGrid from '@/components/DotGrid';
 export default function Home() {
     const [list, setList] = useState([])
     const [handle, setHandle] = useState("")
-    const [validCodes, setValidCodes] = useState([])
     const [loginState, setLoginState] = useState(false)
 
     useEffect(() => {
@@ -21,7 +20,6 @@ export default function Home() {
     const fetchDB = async (searchValue = '') => {
         await onValue(ref(db), (snapshot) => {
             setList([]);
-            setValidCodes([])
             const res = snapshot.val();
             try {
                 res.data !== undefined ? Object.values(res.data).filter((entry) => {
@@ -29,9 +27,6 @@ export default function Home() {
                 }).map((entry) => {
                     setList((oldArray) => [...oldArray, entry]);
                 }) : setList([])
-                res.codes !== undefined ? Object.values(res.codes).map((code) => {
-                    setValidCodes((oldArray) => [...oldArray, code]);
-                }) : setValidCodes([])
             } catch (_) {
 
             }
@@ -86,7 +81,6 @@ export default function Home() {
                 {
                     loginState && list !== [] && <HeadForm
                         onSearch={(e) => fetchDB(e)}
-                        validCodes={validCodes}
                         list={list}
                         handle={handle}
                     />
