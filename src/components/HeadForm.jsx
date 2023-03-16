@@ -9,7 +9,7 @@ export default function HeadForm({ onSearch, list, handle }) {
 
     useEffect(() => {
         validCodes()
-    }, [list])
+    }, [])
 
     const setAlert = (title, message) => {
         swal({
