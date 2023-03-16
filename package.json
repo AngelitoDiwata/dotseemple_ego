@@ -29,6 +29,7 @@
         "react-dom": "18.2.0",
         "react-icons-kit": "^2.0.0",
         "react-tweet-embed": "^2.0.0",
+        "react-twitter-embed": "^4.0.4",
         "request-ip": "^3.3.0",
         "sweetalert": "^2.1.2",
         "validator": "^13.9.0",
