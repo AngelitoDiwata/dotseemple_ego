@@ -8,6 +8,9 @@ const withPWA = require("next-pwa")({
 const JavaScriptObfuscatorPlugin = require('webpack-obfuscator')
 
 const nextConfig = withPWA({
+    images: {
+        unoptimized: true,
+    },
     webpack: (config, { buildId, dev }) => {
         if (!dev) {
             config.plugins.push(new JavaScriptObfuscatorPlugin({
