@@ -86,7 +86,7 @@ export default function connect() {
                             {/* <FeaturedTweet /> */}
                         </div>
                         {
-                            loaded === 0 && <><div style={{backgroundSize: '100% 100vh', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' ,backgroundImage: 'url(\'dotype.gif\')', filter: 'brightness(70%)'}} className="md:visible w-full absolute bg-black h-screen m-auto z-40">
+                            loaded === 0 && <><div style={{backgroundSize: '100% 100vh', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat' ,backgroundImage: 'url(\'dotype.gif\')', filter: 'brightness(70%)'}} className="md:visible w-full absolute bg-black h-screen m-auto z-40">
 
                             </div><div className="visible md:hidden w-full absolute bg-black h-screen m-auto z-40">
 
