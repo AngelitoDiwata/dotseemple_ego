@@ -66,7 +66,7 @@ export default function ControlArea({ userData }) {
                     </span>
                     <span className='text-base'>active code{activeCodes > 1 && 's'}</span>
                 </div>
-                <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-neutral-900 w-full max-w-xs" />
+                <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-black w-full max-w-xs" />
             </div>
             <button onClick={validateEntry} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-fit rounded-none">Submit</button>
         </div>
