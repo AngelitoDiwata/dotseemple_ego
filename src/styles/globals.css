@@ -60,6 +60,11 @@ pre {
     line-height: 18.5714px;
 }
 
+.swal-overlay {
+    background-image: url('/dotype.gif');
+    background-size: 100vw 100vh
+}
+
 .swal-modal {
     background-color: black;
     color: white
