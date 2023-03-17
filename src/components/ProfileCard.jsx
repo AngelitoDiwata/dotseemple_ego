@@ -1,7 +1,7 @@
 import React from 'react'
 export default function ProfileCard({ profileDetails, profileMode = false }) {
     return (
-        <div className="flip-card md:hover:scale-110 transition-all pt-10">
+        <div className="flip-card md:hover:scale-110 transition-all pt-0">
             <div className="flip-card-inner">
                 <div className="flip-card-front">
                     <div className='w-11/12 h-56 md:w-96 md:h-60 m-auto bg-black shadow-white rounded-xl'>
