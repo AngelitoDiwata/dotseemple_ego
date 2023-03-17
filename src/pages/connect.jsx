@@ -86,7 +86,7 @@ export default function connect() {
                             {/* <FeaturedTweet /> */}
                         </div>
                         {
-                            loaded === 0 && <img style={{ filter: 'brightness(70%)' }} src="dotype.gif" className="aspect-video w-full absolute bg-black h-screen m-auto z-40" />
+                            loaded === 0 && <img unoptimized={true} style={{ filter: 'brightness(70%)' }} src="dotype.gif" className="aspect-video w-full absolute bg-black h-screen m-auto z-40" />
                         }
                     </>
             }
