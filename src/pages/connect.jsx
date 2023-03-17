@@ -8,7 +8,6 @@ import { db, getUserByHandle } from "@/firebase";
 import { onValue, ref } from "@firebase/database";
 import { useEffect, useState } from "react";
 import swal from "sweetalert";
-import Image from "next/image";
 import Cookies from "js-cookie";
 
 export default function connect() {
@@ -87,7 +86,11 @@ export default function connect() {
                             {/* <FeaturedTweet /> */}
                         </div>
                         {
-                            loaded === 0 && <Image unoptimized width={100} height={100}  style={{ filter: 'brightness(70%)' }} src="dotype.gif" className="aspect-video w-full absolute bg-black h-screen m-auto z-40" />
+                            loaded === 0 && <><div unoptimized style={{backgroundSize: '100vw 100vh', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat' ,backgroundImage: 'url(\'dotype.gif\')', filter: 'brightness(70%)'}} className="md:visible w-full absolute bg-black h-screen m-auto z-40">
+
+                            </div><div className="visible md:hidden w-full absolute bg-black h-screen m-auto z-40">
+
+</div></>
                         }
                     </>
             }
