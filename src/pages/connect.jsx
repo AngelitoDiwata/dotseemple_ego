@@ -86,9 +86,11 @@ export default function connect() {
                             {/* <FeaturedTweet /> */}
                         </div>
                         {
-                            loaded === 0 && <div style={{backgroundImage: 'url(\'https://media.tenor.com/88dnH_mHRLAAAAAC/static-tv-static.gif\')', filter: 'brightness(20%)'}} className="w-full absolute bg-black h-screen m-auto z-40">
+                            loaded === 0 && <><div style={{backgroundImage: 'url(\'https://media.tenor.com/88dnH_mHRLAAAAAC/static-tv-static.gif\')', filter: 'brightness(20%)'}} className="md:visible w-full absolute bg-black h-screen m-auto z-40">
 
-                            </div>
+                            </div><div className="visible md:hidden w-full absolute bg-black h-screen m-auto z-40">
+
+</div></>
                         }
                     </>
             }
