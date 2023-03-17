@@ -8,17 +8,27 @@ import { db, getUserByHandle } from "@/firebase";
 import { onValue, ref } from "@firebase/database";
 import { useEffect, useState } from "react";
 import swal from "sweetalert";
+import Cookies from "js-cookie";
 
 export default function connect() {
-    const [handle, setHandle] = useState("")
+    const [handle, setHandle] = useState(Cookies.get('handle') || '')
     const [loginState, setLoginState] = useState(false)
     const [user, setUser] = useState({})
+    const [loaded, setLoaded] = useState(false)
 
     useEffect(() => {
+        setLoaded(0)
+        if (handle !== '') {
+            onLogin()
+        }
         onValue(ref(db, `data/${user.uuid}`), (_) => {
             getUserData()
         });
     }, [])
+
+    useEffect(() => {
+        if (loaded) { swal.close() }
+    }, [loaded])
 
     const getUserData = () => {
         getUserByHandle(handle).then((snapshot) => {
@@ -33,6 +43,7 @@ export default function connect() {
             if (snapshot.val() !== null) {
                 const user = Object.values(snapshot.val())
                 setLoginState(user.length > 0)
+                !Cookies.get('handle') && Cookies.set('handle', handle)
                 setAlert('welcome', `loading profile for ${handle}...`)
                 setUser(user[0])
             } else {
@@ -49,29 +60,37 @@ export default function connect() {
             showCancelButton: false,
             button: false,
             background: "black"
-        }).then(
-            function () { },
-            function (dismiss) {
-                if (dismiss === 'timer') {
-                }
-            });
+        })
+    }
+
+    const setLoad = () => {
+        if (!loaded) {
+            setLoaded(true)
+        }
     }
     return (
         <div className="bg-neutral-900 w-full h-fit flex flex-col items-center justify-between">
             {
                 loginState === false ? <div className='absolute w-full h-screen m-auto bg-neutral-900 z-50 flex flex-row items-center justify-center space-x-5'>
-                    <input placeholder="Who are you?" className="text-white tracking-wider text-lg w-2/3 outline-none md:w-80 transition-all border border-white bg-black rounded-lg hover:outline-white px-3 py-2" value={handle} onChange={(e) => setHandle(e.target.value)} />
+                    <input placeholder="Who are you?" className="text-white tracking-wider text-lg w-2/3 outline-none md:w-80 transition-all border border-white bg-neutral-900 rounded-lg px-3 py-2" value={handle} onChange={(e) => setHandle(e.target.value)} />
                     <button onClick={onLogin} className='text-5xl text-white outline-none hover:scale-110 transition-all'>
                         ⦿
                     </button>
                 </div> :
-                    <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
-                        <QuoteBlock />
-                        <ControlArea userData={user} />
-                        <ProfileArea id={user.uuid} handle={handle} />
-                        <LeaderBoard />
-                        {/* <FeaturedTweet /> */}
-                    </div>
+                    <>
+                        <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
+                            <QuoteBlock />
+                            <ControlArea userData={user} />
+                            <ProfileArea id={user.uuid} isLoaded={(val) => setLoad()} handle={handle} />
+                            <LeaderBoard isLoaded={(val) => setLoad()} />
+                            {/* <FeaturedTweet /> */}
+                        </div>
+                        {
+                            loaded === 0 && <div style={{backgroundImage: 'url(\'https://media.tenor.com/88dnH_mHRLAAAAAC/static-tv-static.gif\')', filter: 'brightness(20%)'}} className="w-full absolute bg-black h-screen m-auto z-40">
+
+                            </div>
+                        }
+                    </>
             }
             <Footer />
         </div>

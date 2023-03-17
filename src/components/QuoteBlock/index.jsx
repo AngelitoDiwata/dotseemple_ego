@@ -11,8 +11,8 @@ export default function QuoteBlock() {
   }, [])
   return (
     <div className='w-full md:w-1/2 lg:w-2/3 flex flex-row items-center justify-center py-10 px-10'>
-        <span className='italic font-thin tracking-widest text-white text-xl'>
-            <span className='text-3xl text-white font-extralight'>"</span>{quote}<span className='text-3xl text-white font-extralight'>"</span>
+        <span className='italic tracking-widest text-center text-white'>
+            <span className='text-white text-center font-normal'>"</span>{quote}<span className='text-white'>"</span>
         </span>
     </div>
   )

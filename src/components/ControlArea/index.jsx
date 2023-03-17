@@ -55,21 +55,20 @@ export default function ControlArea({ userData }) {
                 setCode('')
             }
         })
-
     }
 
     return (
         <div className='text-white flex flex-row items-end justify-center space-x-2 w-full md:w-3/4 m-auto'>
             <div className='flex flex-col items-center justify-center space-y-1 w-fit'>
-                <div className='w-full flex flex-row items-center justify-end space-x-3'>
-                    <span className='text-white text-2xl md:text-5xl'>
+                <div className='w-full flex flex-row items-center justify-end py-3 space-x-3'>
+                    <span className='text-white'>
                         {activeCodes}
                     </span>
-                    <span className='md:text-lg'>active code/s</span>
+                    <span className='text-base'>active code{activeCodes > 1 && 's'}</span>
                 </div>
-                <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input input-bordered border-white bg-neutral-900 w-full max-w-xs" />
+                <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-neutral-900 w-full max-w-xs" />
             </div>
-            <button onClick={validateEntry} className="btn outline-dotted text-white outline-white btn-outline md:btn-lg w-fit">Submit</button>
+            <button onClick={validateEntry} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-fit rounded-none">Submit</button>
         </div>
     )
 }

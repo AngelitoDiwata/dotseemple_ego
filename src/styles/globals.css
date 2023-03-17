@@ -61,7 +61,7 @@ pre {
 }
 
 .swal-modal {
-    background-color: #0e1111;
+    background-color: black;
     color: white
 }
 
@@ -71,7 +71,7 @@ pre {
 }
 
 .swal-button {
-    background-color: black;
+    background-color: #0e1111;
     border-color: white;
     color: white;
 }
@@ -164,9 +164,11 @@ a {
     transform-style: preserve-3d;
 }
 
+
+/* 
 .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
-}
+} */
 
 .flip-card-front,
 .flip-card-back {
