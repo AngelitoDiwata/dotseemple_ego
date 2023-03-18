@@ -60,21 +60,20 @@ pre {
     line-height: 18.5714px;
 }
 
-
-/* @media (min-width:320px) {
-    .swal-overlay {
-        background-color: black;
+@media (min-width:320px) {
+    .swal-title {
+        margin: 0px;
+        font-size: 20px;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+        margin-bottom: 28px;
+    }
+    .swal-text {
+        margin: 0px;
+        font-size: 15px;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+        margin-bottom: 28px;
     }
 }
-
-@media (min-width:1281px) {
-    .swal-overlay {
-        background-image: url('/dotype.gif');
-        background-size: 100vw 100vh;
-    }
-}
-
- */
 
 .swal-modal {
     background-color: black;
