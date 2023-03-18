@@ -21,7 +21,6 @@ export default function connect() {
             onLogin()
         }
         onValue(ref(db, `data/${user.uuid}`), (snapshot) => {
-
             setUser(snapshot.val())
         });
     }, [])
@@ -80,7 +79,7 @@ export default function connect() {
                     <>
                         <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                             <QuoteBlock />
-                            <ControlArea userData={user} />
+                            <ControlArea onSubmit={getUserData} userData={user} />
                             <ProfileArea id={user.uuid} isLoaded={(val) => setLoad()} handle={handle} />
                             <LeaderBoard isLoaded={(val) => setLoad()} />
                             {/* <FeaturedTweet /> */}

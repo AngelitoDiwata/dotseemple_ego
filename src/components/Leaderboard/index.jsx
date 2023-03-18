@@ -5,12 +5,10 @@ import React, { useEffect, useState } from 'react'
 export default function LeaderBoard({ isLoaded }) {
     const [top40, setTop40] = useState([{}])
     useEffect(() => {
-        onValue(ref(db, 'data'), (_) => {
-            getTop40().then((snapshot) => {
-                setTop40(Object.values(snapshot.val()).sort((a, b) => (a.connections > b.connections ? -1 : 1)))
-                isLoaded('leaderboard')
-            })
-        });
+        getTop40().then((snapshot) => {
+            setTop40(Object.values(snapshot.val()).sort((a, b) => (a.connections > b.connections ? -1 : 1)))
+            isLoaded('leaderboard')
+        })
     }, [])
 
     return (

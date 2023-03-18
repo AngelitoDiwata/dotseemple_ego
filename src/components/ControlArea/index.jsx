@@ -3,7 +3,7 @@ import { onValue, ref, get, orderByChild, query } from 'firebase/database'
 import { db, incrementUserPoint } from '@/firebase'
 import swal from 'sweetalert';
 
-export default function ControlArea({ userData }) {
+export default function ControlArea({ userData, onSubmit }) {
     const [activeCodes, setActiveCodes] = useState(0)
     const [code, setCode] = useState('')
     const [currentCodes, setCurrentCodes] = useState([])
@@ -51,6 +51,7 @@ export default function ControlArea({ userData }) {
                     collections: userData.hasOwnProperty('collections') ? [...userData.collections, code] : [code],
                     uuid: userData.uuid
                 })
+                onSubmit()
                 setAlert('', 'Valid code. Dot has been credited. Thanks!')
                 setCode('')
             }
