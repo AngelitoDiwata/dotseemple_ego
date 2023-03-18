@@ -1,5 +1,4 @@
 import ControlArea from "@/components/ControlArea";
-import FeaturedTweet from "@/components/FeaturedTweet";
 import Footer from "@/components/Footer/Footer";
 import LeaderBoard from "@/components/Leaderboard";
 import ProfileArea from "@/components/ProfileArea";
@@ -86,9 +85,11 @@ export default function connect() {
                             {/* <FeaturedTweet /> */}
                         </div>
                         {
-                            loaded === 0 && <><div className="w-full absolute bg-black h-screen m-auto z-40">
+                            loaded === 0 && <><div unoptimized style={{backgroundSize: '100vw 100vh', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat' ,backgroundImage: 'url(\'dotype.gif\')', filter: 'brightness(70%)'}} className="md:visible w-full absolute bg-black h-screen m-auto z-40">
 
-                            </div></>
+                            </div><div className="visible md:hidden w-full absolute bg-black h-screen m-auto z-40">
+
+</div></>
                         }
                     </>
             }

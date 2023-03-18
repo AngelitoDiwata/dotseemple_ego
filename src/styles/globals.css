@@ -60,7 +60,8 @@ pre {
     line-height: 18.5714px;
 }
 
-@media (min-width:320px) {
+
+/* @media (min-width:320px) {
     .swal-overlay {
         background-color: black;
     }
@@ -76,7 +77,7 @@ pre {
 .swal-modal {
     background-color: black;
     color: white
-}
+} */
 
 .swal-title,
 .swal-text {
