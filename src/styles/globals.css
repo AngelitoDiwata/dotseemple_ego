@@ -19,6 +19,7 @@ h3 {
     line-height: 15.4px;
 }
 
+a,
 span,
 input,
 button,
@@ -59,8 +60,23 @@ pre {
     line-height: 18.5714px;
 }
 
+@media (min-width:320px) {
+    .swal-title {
+        margin: 0px;
+        font-size: 20px;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+        margin-bottom: 28px;
+    }
+    .swal-text {
+        margin: 0px;
+        font-size: 15px;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+        margin-bottom: 28px;
+    }
+}
+
 .swal-modal {
-    background-color: #0e1111;
+    background-color: black;
     color: white
 }
 
@@ -70,7 +86,7 @@ pre {
 }
 
 .swal-button {
-    background-color: black;
+    background-color: #0e1111;
     border-color: white;
     color: white;
 }
@@ -163,9 +179,11 @@ a {
     transform-style: preserve-3d;
 }
 
+
+/* 
 .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
-}
+} */
 
 .flip-card-front,
 .flip-card-back {
