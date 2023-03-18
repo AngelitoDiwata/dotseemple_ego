@@ -20,8 +20,9 @@ export default function connect() {
         if (handle !== '') {
             onLogin()
         }
-        onValue(ref(db, `data/${user.uuid}`), (_) => {
-            getUserData()
+        onValue(ref(db, `data/${user.uuid}`), (snapshot) => {
+
+            setUser(snapshot.val())
         });
     }, [])
 
@@ -87,7 +88,7 @@ export default function connect() {
                         {
                             loaded === 0 && <><div className="w-full absolute bg-black h-screen m-auto z-40">
 
-</div></>
+                            </div></>
                         }
                     </>
             }

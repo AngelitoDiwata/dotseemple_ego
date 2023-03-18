@@ -16,7 +16,7 @@ export default function ControlArea({ userData }) {
         });
         onValue(ref(db, `data/${userData.uuid}`), (snapshot) => {
             const res = snapshot.val()
-            if (res !== null){
+            if (res !== null) {
                 setCurrentCodes(res.collections)
             }
         });
@@ -42,7 +42,7 @@ export default function ControlArea({ userData }) {
             const codes = Object.values(snapshot.val()).filter((code) => new Date(code.ttl) > new Date())
             if (code.trim() === '') {
                 setAlert('', 'Code cannot be empty!')
-            } else if (!codes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code).includes(code)) {
+            } else if (!codes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code.trim()).includes(code.trim())) {
                 setAlert('', 'Sorry. code is either invalid/expired.')
             } else if (userData.hasOwnProperty('collections') && currentCodes.includes(code)) {
                 setAlert('', 'Code already claimed!')
