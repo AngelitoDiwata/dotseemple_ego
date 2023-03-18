@@ -6,7 +6,7 @@ export default function LeaderBoard({ isLoaded }) {
     const [top40, setTop40] = useState([{}])
     useEffect(() => {
         getTop40().then((snapshot) => {
-            setTop40(Object.values(snapshot.val()).sort((a, b) => (a.connections > b.connections ? -1 : 1)))
+            setTop40(Object.values(snapshot.val()).sort((a, b) => (a.connections > b.connections ? -1 : 1)).map((user) => { return { handle: user.handle, connections:user.connections}}))
             isLoaded('leaderboard')
         })
     }, [])
