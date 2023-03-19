@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, limitToFirst, limitToLast } from "firebase/database"
-import {set, ref, onValue, update, get, query, orderByChild, equalTo } from "firebase/database";
+import { getDatabase, limitToLast } from "firebase/database"
+import { ref, update, get, query, orderByChild, equalTo } from "firebase/database";
 /**
  * PROD CONFIG
  */
