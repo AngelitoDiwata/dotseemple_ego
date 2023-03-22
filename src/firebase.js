@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, limitToLast } from "firebase/database"
 import { ref, update, get, query, orderByChild, equalTo } from "firebase/database";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth"
 
 /**
  * PROD CONFIG
@@ -71,4 +71,16 @@ export function incrementUserPoint(data) {
  */
 export async function signIn(email, password) {
     return await signInWithEmailAndPassword(auth, email, password)
+}
+
+export async function signOutUser() {
+    return signOut(auth)
+}
+
+export async function createUser(email, password) {
+    return await createUserWithEmailAndPassword(auth, email, password)
+}
+
+export async function updateCredentials(data) {
+    return await update(ref(db, `data/${data.uuid}`), { wallet: data.wallet, email: data.email, bio: data.bio, role: data.role })
 }

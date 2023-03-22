@@ -74,7 +74,14 @@ export default function ProfileForm({ uuid, setData, submitData }) {
 
     const submit = () => {
         if (!Object.values(validate()).map((item) => item.value).includes(false)) {
-            submitData()
+            submitData({
+                uuid,
+                email,
+                bio,
+                wallet,
+                role,
+                password,
+            })
         } else {
 
         }

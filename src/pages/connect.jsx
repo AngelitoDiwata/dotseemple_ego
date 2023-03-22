@@ -16,6 +16,9 @@ function connect({ currentUser, getUserData }) {
     const [user, loading, error] = useAuthState(auth);
     const router = useRouter()
     useEffect(() => {
+        if(!user) {
+            router.replace('/')
+        }
        if (!loading && loaded) {
          swal.close()
         }

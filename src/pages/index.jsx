@@ -34,6 +34,7 @@ function index({ currentUser }) {
 
 
     const onLogin = () => {
+        setAlert('Logging in...')
         signIn(email, password).then(
             () => {
                 getUserData(email)
@@ -54,7 +55,7 @@ function index({ currentUser }) {
                     </button>
                 </div>
             </div>
-            <Footer />
+            <Footer isLogin={true} />
         </div>
     )
 }
