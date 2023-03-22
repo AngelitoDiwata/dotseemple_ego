@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, limitToLast } from "firebase/database"
 import { ref, update, get, query, orderByChild, equalTo } from "firebase/database";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 
 /**
  * PROD CONFIG
@@ -32,6 +33,7 @@ const firebaseConfig_prod = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig_prod);
 export const db = getDatabase(app)
+export const auth = getAuth(app)
 
 /**
  * Get current User by Handle
@@ -39,6 +41,10 @@ export const db = getDatabase(app)
 
 export function getUserByHandle(handle) {
     return get(query(ref(db, '/data'), orderByChild('handle'), equalTo(handle.toUpperCase())))
+}
+
+export function getUserByEmail(email) {
+    return get(query(ref(db, '/data'), orderByChild('email'), equalTo(email)))
 }
 
 /**
@@ -57,16 +63,12 @@ export function incrementUserPoint(data) {
     update(ref(db, `/data/${data.uuid}`), { connections: data.collections.length, collections: data.collections });
 }
 
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-
-export function checkIfLoggedIn(success, fail) {
-    const auth = getAuth()
-    auth.
-    onAuthStateChanged((user) => {
-        if (user) {
-            success()
-        } else {
-            fail()
-        }
-    })
+/**
+ * Signin function
+ * @param {String} email 
+ * @param {String} password 
+ * @param {Function} callBack 
+ */
+export async function signIn(email, password) {
+    return await signInWithEmailAndPassword(auth, email, password)
 }

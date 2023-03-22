@@ -17,7 +17,6 @@ export const setAlert = (title, message) => {
     swal({
         title: title,
         text: message,
-        timer: 2500,
         showCancelButton: false,
         button: false
     }).then(

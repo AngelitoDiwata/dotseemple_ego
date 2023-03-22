@@ -1,25 +1,55 @@
-import React, { useState } from 'react'
-import { twitter } from 'react-icons-kit/icomoon/'
-import { Icon } from 'react-icons-kit'
+import React, { useState, useEffect } from 'react'
 import Footer from '@/components/Footer/Footer'
 import TextBlock from '@/components/TextBlock'
 import PassBlock from '@/components/PassBlock'
+import useUserAuth from '@/hooks/useUserAuth'
+import { getUserByEmail, signIn } from '@/firebase'
+import { useRouter } from 'next/router'
+import { setAlert } from '@/mixins'
 
-export default function index() {
+function index({ currentUser }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    
-    const onLogin = () => {
+    const router = useRouter()
 
+    useEffect(() => {
+        async () => { 
+            if (await currentUser) {
+                router.replace('/connect')
+            }
+        }
+    }, [currentUser])
+
+    const getUserData = (email) => {
+        getUserByEmail(email).then((snapshot) => {
+            const res = snapshot.val()
+            if (res) {
+                router.push('/connect')
+            } else {
+                setAlert('You are not part of the circle yet')
+            }
+        })
     }
-    
+
+
+
+    const onLogin = () => {
+        signIn(email, password).then(
+            () => {
+                getUserData(email)
+            }
+        ).catch((_) => {
+            setAlert('Incorrect Credentials.')
+        })
+    }
+
     return (
         <div className='h-screen w-full flex flex-col items-center justify-between bg-black'>
-            <div className="card transition-all flex flex-row items-center justify-center h-screen w-11/12 md:w-80 mt-10 shadow-xl shadow-neutral-900">
+            <div className="card transition-all flex flex-row items-center justify-center h-screen w-11/12 md:w-80 mt-10">
                 <div className='w-fit h-fit m-auto flex flex-col items-center justify-center space-y-2'>
                     <TextBlock label="email" onChange={value => setEmail(value)} />
                     <PassBlock label="password" onChange={value => setPassword(value)} />
-                    <button className='w-full flex flex-row items-center justify-end space-x-2 mr-2 self-end text-white outline-none'>
+                    <button onClick={onLogin} className='w-full flex flex-row items-center justify-end space-x-2 mr-2 self-end text-white outline-none'>
                         <span className='text-5xl'>⦿</span> <span className='text-xs'>Login</span>
                     </button>
                 </div>
@@ -28,3 +58,7 @@ export default function index() {
         </div>
     )
 }
+
+export default useUserAuth(index)
+
+

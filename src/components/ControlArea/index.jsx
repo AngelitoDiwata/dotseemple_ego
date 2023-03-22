@@ -15,13 +15,16 @@ export default function ControlArea({ userData, onSubmit }) {
                 setActiveCodes(Object.values(snapshot.val()).filter((code) => new Date(code.ttl) > new Date()).length)
             })
         });
+    }, [])
+
+    useEffect(() => {
         onValue(ref(db, `data/${userData.uuid}`), (snapshot) => {
             const res = snapshot.val()
             if (res !== null) {
                 setCurrentCodes(res.collections)
             }
         });
-    }, [])
+    }, [userData])
 
     const setAlert = (title, message) => {
         swal({
@@ -55,7 +58,7 @@ export default function ControlArea({ userData, onSubmit }) {
                     collections: userData.hasOwnProperty('collections') ? [...userData.collections, userCode] : [userCode],
                     uuid: userData.uuid
                 })
-                onSubmit()
+                onSubmit(userData.email)
                 setAlert('', 'Valid code. Dot has been credited. Thanks!')
                 setCode('')
             }
