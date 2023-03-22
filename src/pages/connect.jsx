@@ -15,6 +15,9 @@ function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
     const [user, loading, error] = useAuthState(auth);
     const router = useRouter()
+    if (router.isFallback) {
+        return <div>Loading...</div>
+      }
     useEffect(() => {
         if(!user) {
             router.replace('/')

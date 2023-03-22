@@ -7,12 +7,15 @@ import ProfileCard from '@/components/ProfileCard';
 import Footer from '@/components/Footer/Footer';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export default function register() {
+export default function handler() {
     const router = useRouter()
     const [user, loading, error] = useAuthState(auth);
     const { hash } = router.query
     const [currentUser, setCurrentUser] = useState('')
     const [userData, setUserData] = useState({})
+    if (router?.isFallback) {
+        return <div>Loading...</div>
+      }
     const sendCardData = (data) => {
         return setUserData(data)
     }

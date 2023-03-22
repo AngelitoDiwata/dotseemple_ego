@@ -15,7 +15,14 @@ export default function ProfileForm({ uuid, setData, submitData }) {
     const [password, setPassword] = useState('')
     const [confPass, setConfPass] = useState('')
     const [understood, setUnderstood] = useState(false)
-    const RoleList = ['Buidler', 'Artist', 'Influencer', 'Flipper/Trader']
+    const RoleList = ['DEGEN',
+        'COMMUNITY BUILDER',
+        'COLLAB MANAGER',
+        'ARTIST',
+        'FOUNDER',
+        'CONTENT WRITER',
+        'ADVISOR',
+        'ALPHA CALLER']
 
     useEffect(() => {
         fetchDB(uuid)
@@ -54,11 +61,10 @@ export default function ProfileForm({ uuid, setData, submitData }) {
     }
 
     const validate = () => {
-        const web3Util = new Web3()
         return {
             isValidEmail: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email), errMsg: 'Please provide valid email address.' },
             isValidBio: { value: bio.trim().length > 0, errMsg: 'Please provide valid bio.' },
-            isValidWallet: { value: web3Util.isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
+            isValidWallet: { value: Web3.utils.isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
             isValidRole: { value: RoleList.includes(role), errMsg: 'Please select a valid role.' },
             isValidPassword: { value: password.trim().length > 8 && confPass.trim().length > 8, errMsg: 'Please provide valid passwords.' },
             isPasswordMatch: { value: password === confPass && password.trim().length > 8, errMsg: 'Passwords don\'t match.' },

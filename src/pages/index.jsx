@@ -11,7 +11,9 @@ function index({ currentUser }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const router = useRouter()
-
+    if (router.isFallback) {
+        return <div>Loading...</div>
+      }
     useEffect(() => {
         async () => { 
             if (await currentUser) {

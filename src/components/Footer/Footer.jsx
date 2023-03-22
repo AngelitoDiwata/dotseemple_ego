@@ -7,6 +7,9 @@ import { setAlert } from '@/mixins'
 
 export default function Footer({ isLogin = false }) {
     const router = useRouter()
+    if (router.isFallback) {
+        return <div>Loading...</div>
+      }
     const onLogout = () => {
         setAlert('Logging out...')
         signOutUser().then(() => {
