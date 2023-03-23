@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { decryptHandle, setAlert } from '@/mixins';
 import { auth, createUser, getUserByHandle, signIn, updateCredentials } from '@/firebase';
 import ProfileForm from '@/components/ProfileForm';
-import ProfileCard from '@/components/ProfileCard';
 import Footer from '@/components/Footer/Footer';
 import { useAuthState } from "react-firebase-hooks/auth";
 

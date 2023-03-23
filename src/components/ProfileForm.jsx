@@ -66,7 +66,7 @@ export default function ProfileForm({ uuid, setData, submitData }) {
             isValidBio: { value: bio.trim().length > 0, errMsg: 'Please provide valid bio.' },
             isValidWallet: { value: Web3.utils.isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
             isValidRole: { value: RoleList.includes(role), errMsg: 'Please select a valid role.' },
-            isValidPassword: { value: password.trim().length > 8 && confPass.trim().length > 8, errMsg: 'Please provide valid passwords.' },
+            isValidPassword: { value: password.trim().length > 8 && confPass.trim().length > 8, errMsg: 'Password should match and have more than 8 characters' },
             isPasswordMatch: { value: password === confPass && password.trim().length > 8, errMsg: 'Passwords don\'t match.' },
             isUnderstood: { value: understood === true, errMsg: 'Please agree to the condition.' },
         }
@@ -94,9 +94,9 @@ export default function ProfileForm({ uuid, setData, submitData }) {
     }
 
 
-    return (
-        <div className='hscreen overflow-scroll flex flex-col items-start justify-around space-y-5 px-5 md:px-0 pt-5 h-fit  bg-black text-white'>
-            <span className='text-lg font-bold text-white'>Provide your details:</span>
+    return (handle ?
+        <div className='hscreen overflow-scroll flex flex-col items-start justify-around space-y-5 px-5 md:px-0 pt-5 h-fit mb-20  bg-black text-white'>
+            <span className='text-lg font-bold text-white'>Provide your details, {handle}:</span>
             <TextBlock errorMsg={!getErrorMessages()[0].value && getErrorMessages()[0].errMsg} label="Email" placeholder="Example: info@site.com" onChange={(value) => setEmail(value)} />
             <div className='w-full'>
                 <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="textarea textarea-lg w-full bg-black text-white resize-none border border-white rounded-lg" placeholder="Short bio"></textarea>
@@ -109,6 +109,6 @@ export default function ProfileForm({ uuid, setData, submitData }) {
             <div className='w-full flex flex-row items-center justify-end'>
                 <button disabled={Object.values(validate()).map((item) => item.value).includes(false)} className="btn btn-outline text-white" onClick={submit}>Update profile</button>
             </div>
-        </div>
+        </div> : <div>Loading...</div>
     )
 }

@@ -9,7 +9,7 @@ export default function SelectBlock({ items, placeholder, onChange, errorMsg}) {
 
     return (
         <div className='w-full'>
-            <select value={value} onChange={(e) => setValue(e.target.value)} defaultValue={placeholder} className="select bg-black text-white select-bordered w-full border border-white rounded-lg">
+            <select value={value} onChange={(e) => setValue(e.target.value)} className="select bg-black text-white select-bordered w-full border border-white rounded-lg">
                 <option disabled>{placeholder}</option>
                 {
                     items.map((item, index) => <option key={index}>{item}</option>)
