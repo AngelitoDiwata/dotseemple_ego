@@ -8,7 +8,6 @@ import CheckBlock from './CheckBlock';
 import isAddress from 'ethereum-address' 
 
 export default function ProfileForm({ uuid, submitData }) {
-    const web3 = new Web3()
     const [handle, setHandle] = useState('')
     const [email, setEmail] = useState('')
     const [bio, setBio] = useState('')
