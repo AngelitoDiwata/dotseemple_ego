@@ -9,9 +9,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 export default function handler() {
     const router = useRouter()
     const [user, loading, error] = useAuthState(auth);
-    const { hash } = router.query
+    const { hash } = router?.query
     const [currentUser, setCurrentUser] = useState('')
-    
+
     if (router?.isFallback) {
         return <div>Loading...</div>
     }
@@ -40,7 +40,7 @@ export default function handler() {
     const submitForm = (data) => {
         createUser(data.email, data.password).then(() => {
             signIn(data.email, data.password).then(() => {
-               
+
             })
             updateCredentials(data).then(() => {
                 setAlert('Successfully updated profile!')
