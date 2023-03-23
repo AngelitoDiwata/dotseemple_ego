@@ -5,7 +5,7 @@ import PassBlock from './PassBlock';
 import SelectBlock from './SelectBlock';
 import TextBlock from './TextBlock';
 import CheckBlock from './CheckBlock';
-import Web3 from 'web3';
+import { Web3 } from 'web3';
 export default function ProfileForm({ uuid, submitData }) {
     const [handle, setHandle] = useState('')
     const [email, setEmail] = useState('')
@@ -83,18 +83,18 @@ export default function ProfileForm({ uuid, submitData }) {
     return (handle ?
         <form className='hscreen overflow-scroll flex flex-col items-start justify-around space-y-5 px-5 md:px-0 pt-5 h-fit mb-20  bg-black text-white'>
             <span className='text-lg font-bold text-white'>Provide your details, {handle}:</span>
-                <TextBlock errorMsg={!getErrorMessages()[0].value && getErrorMessages()[0].errMsg} label="Email" placeholder="Example: info@site.com" onChange={(value) => setEmail(value)} />
-                <div className='w-full'>
-                    <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="textarea textarea-lg w-full bg-black text-white resize-none border border-white rounded-lg" placeholder="Short bio"></textarea>
-                </div>
-                <TextBlock errorMsg={!getErrorMessages()[2].value && getErrorMessages()[2].errMsg} label="Wallet" placeholder={"Example: 0xb794f5ea0ba39494fe839913fffba74279579268"} onChange={(value) => setWallet(value)} />
-                <SelectBlock errorMsg={!getErrorMessages()[3].value && getErrorMessages()[3].errMsg} items={RoleList} placeholder="Select your Web3 role:" onChange={(value) => setRole(value)} />
-                <PassBlock errorMsg={!getErrorMessages()[4].value && getErrorMessages()[4].errMsg} label="Create Password" placeholder="Create a strong password" onChange={(value) => setPassword(value)} />
-                <PassBlock errorMsg={!getErrorMessages()[5].value && getErrorMessages()[5].errMsg} label="Confirm Password" placeholder="Confirm your password" onChange={(value) => setConfPass(value)} />
-                <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid." onChange={(value) => setUnderstood(value)} />
-                <div className='w-full flex flex-row items-center justify-end'>
-                    <button disabled={Object.values(validate()).map((item) => item.value).includes(false)} className="btn btn-outline text-white" onClick={submit}>Update profile</button>
-                </div>
+            <TextBlock errorMsg={!getErrorMessages()[0].value && getErrorMessages()[0].errMsg} label="Email" placeholder="Example: info@site.com" onChange={(value) => setEmail(value)} />
+            <div className='w-full'>
+                <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="textarea textarea-lg w-full bg-black text-white resize-none border border-white rounded-lg" placeholder="Short bio"></textarea>
+            </div>
+            <TextBlock errorMsg={!getErrorMessages()[2].value && getErrorMessages()[2].errMsg} label="Wallet" placeholder={"Example: 0xb794f5ea0ba39494fe839913fffba74279579268"} onChange={(value) => setWallet(value)} />
+            <SelectBlock errorMsg={!getErrorMessages()[3].value && getErrorMessages()[3].errMsg} items={RoleList} placeholder="Select your Web3 role:" onChange={(value) => setRole(value)} />
+            <PassBlock errorMsg={!getErrorMessages()[4].value && getErrorMessages()[4].errMsg} label="Create Password" placeholder="Create a strong password" onChange={(value) => setPassword(value)} />
+            <PassBlock errorMsg={!getErrorMessages()[5].value && getErrorMessages()[5].errMsg} label="Confirm Password" placeholder="Confirm your password" onChange={(value) => setConfPass(value)} />
+            <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid." onChange={(value) => setUnderstood(value)} />
+            <div className='w-full flex flex-row items-center justify-end'>
+                <button disabled={Object.values(validate()).map((item) => item.value).includes(false)} className="btn btn-outline text-white" onClick={submit}>Update profile</button>
+            </div>
 
         </form> : <div>Loading...</div>
     )
