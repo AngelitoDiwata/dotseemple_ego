@@ -5,7 +5,7 @@ import PassBlock from './PassBlock';
 import SelectBlock from './SelectBlock';
 import TextBlock from './TextBlock';
 import CheckBlock from './CheckBlock';
-import isAddress from 'ethereum-address' 
+import { isAddress } from 'ethereum-address'
 
 export default function ProfileForm({ uuid, submitData }) {
     const [handle, setHandle] = useState('')
