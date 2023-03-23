@@ -61,6 +61,7 @@ const nextConfig = withPWA({
             ]
         }]
     },
+    ssr: false,
     reactStrictMode: true,
     productionBrowserSourceMaps: false
 })
