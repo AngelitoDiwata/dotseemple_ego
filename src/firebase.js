@@ -44,7 +44,7 @@ export function getUserByHandle(handle) {
 }
 
 export function getUserByEmail(email) {
-    return get(query(ref(db, '/data'), orderByChild('email'), equalTo(email)))
+    return get(query(ref(db, '/data'), orderByChild('email'), equalTo(email.toUpperCase())))
 }
 
 /**
@@ -84,5 +84,5 @@ export async function createUser(email, password) {
 }
 
 export async function updateCredentials(data) {
-    return await update(ref(db, `data/${data.uuid}`), { wallet: data.wallet, email: data.email, bio: data.bio, role: data.role })
+    return await update(ref(db, `data/${data.uuid}`), { wallet: data.wallet, email: data.email.toUpperCase(), bio: data.bio, role: data.role })
 }
