@@ -10,7 +10,7 @@ export default function TextBlock({ label, placeholder, onChange, errorMsg }) {
         <div className="form-control w-full border rounded-lg">
             <label className="input-group">
                 <span className='text-xs bg-black text-white'>{label}</span>
-                <input value={value} onChange={(e) => setValue(e.target.value)} type="text" placeholder={placeholder} className="input bg-black text-white input-bordered w-full" />
+                <input autoComplete='false' value={value} onChange={(e) => setValue(e.target.value)} type="text" placeholder={placeholder} className="input bg-black text-white input-bordered w-full" />
             </label>
             {
                 errorMsg && <label className="label">

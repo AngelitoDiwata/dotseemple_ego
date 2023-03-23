@@ -10,7 +10,7 @@ export default function PassBlock({label, placeholder, onChange, errorMsg}) {
     <div className="form-control w-full border rounded-lg">
       <label className="input-group">
         <span className='text-xs w-fit bg-black text-white'>{label}</span>
-        <input value={password} onChange={(e) => setPassword(e.target.value)} type={visibility ?'text':'password'} placeholder={placeholder} className="hover:outline-none focus:outline-none input bg-black text-white input-bordered w-full" />
+        <input autoComplete='false' value={password} onChange={(e) => setPassword(e.target.value)} type={visibility ?'text':'password'} placeholder={placeholder} className="hover:outline-none focus:outline-none input bg-black text-white input-bordered w-full" />
         <span onClick={() => setVisibility(!visibility)} className='text-xs w-fit bg-black text-white'>{visibility ?'hide' :'view'}</span>
       </label>
       {
