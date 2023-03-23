@@ -75,14 +75,12 @@ export default function ProfileForm({ uuid, submitData }) {
                 role,
                 password,
             })
-        } else {
-
         }
     }
 
 
     return (handle ?
-        <form className='hscreen overflow-scroll flex flex-col items-start justify-around space-y-5 px-5 md:px-0 pt-5 h-fit mb-20  bg-black text-white'>
+        <div className='hscreen overflow-scroll flex flex-col items-start justify-around space-y-5 px-5 md:px-0 pt-5 h-fit mb-20  bg-black text-white'>
             <span className='text-lg font-bold text-white'>Provide your details, {handle}:</span>
             <TextBlock errorMsg={!getErrorMessages()[0].value && getErrorMessages()[0].errMsg} label="Email" placeholder="Example: info@site.com" onChange={(value) => setEmail(value)} />
             <div className='w-full'>
@@ -97,6 +95,6 @@ export default function ProfileForm({ uuid, submitData }) {
                 <button disabled={Object.values(validate()).map((item) => item.value).includes(false)} className="btn btn-outline text-white" onClick={submit}>Update profile</button>
             </div>
 
-        </form> : <div>Loading...</div>
+        </div> : <div>Loading...</div>
     )
 }

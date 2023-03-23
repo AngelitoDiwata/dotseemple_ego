@@ -7,9 +7,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 export default function useUserAuth(Component) {
   return function UseUserAuth(props) {
     const router = useRouter()
-    if (router.isFallback) {
-      return <div>Loading...</div>
-    }
     const [currentUser, setCurrentUser] = useState({})
 
     const [user, loading, error] = useAuthState(auth);

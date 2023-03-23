@@ -70,7 +70,9 @@ export function incrementUserPoint(data) {
  * @param {Function} callBack 
  */
 export async function signIn(email, password) {
-    return await signInWithEmailAndPassword(auth, email, password)
+    return await signInWithEmailAndPassword(auth, email, password).then((err) => {
+        console.log(err)
+    })
 }
 
 export async function signOutUser() {

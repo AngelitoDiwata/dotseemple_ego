@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
-// const withPWA = require("next-pwa")({
-//     dest: "public",
-//     register: true,
-//     skipWaiting: true,
-// });
+const withPWA = require("next-pwa")({
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+});
 
 const JavaScriptObfuscatorPlugin = require('webpack-obfuscator')
 
-const nextConfig = {
+const nextConfig = withPWA({
     images: {
         unoptimized: true,
     },
@@ -63,5 +63,5 @@ const nextConfig = {
     },
     reactStrictMode: true,
     productionBrowserSourceMaps: false
-}
+})
 module.exports = nextConfig
