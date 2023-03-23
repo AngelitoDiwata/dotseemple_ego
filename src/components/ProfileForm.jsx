@@ -5,8 +5,9 @@ import PassBlock from './PassBlock';
 import SelectBlock from './SelectBlock';
 import TextBlock from './TextBlock';
 import CheckBlock from './CheckBlock';
-import { Web3 } from 'web3';
+import Web3 from 'web3';
 export default function ProfileForm({ uuid, submitData }) {
+    const web3 = new Web3()
     const [handle, setHandle] = useState('')
     const [email, setEmail] = useState('')
     const [bio, setBio] = useState('')
@@ -50,7 +51,7 @@ export default function ProfileForm({ uuid, submitData }) {
         return {
             isValidEmail: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email), errMsg: 'Please provide valid email address.' },
             isValidBio: { value: bio.trim().length > 0, errMsg: 'Please provide valid bio.' },
-            isValidWallet: { value: Web3.utils.isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
+            isValidWallet: { value: web3.utils.isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
             isValidRole: { value: RoleList.includes(role), errMsg: 'Please select a valid role.' },
             isValidPassword: { value: password.trim().length > 8 && confPass.trim().length > 8, errMsg: 'Password should match and have more than 8 characters' },
             isPasswordMatch: { value: password === confPass && password.trim().length > 8, errMsg: 'Passwords don\'t match.' },
