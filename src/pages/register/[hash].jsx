@@ -40,7 +40,7 @@ export default function handler() {
                     const res = data.val()
                     if (res) {
                         setAlert('Successfully updated profile!')
-                        router.push('/connect')
+                        window.location.href = "/connect"
                     } else {
                         router.push('/')
                     }

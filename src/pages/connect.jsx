@@ -35,7 +35,7 @@ function connect({ currentUser, getUserData }) {
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
                 <ControlArea onSubmit={getUserData} userData={currentUser} />
-                <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle} data={currentUser} />
+                <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle}/>
                 <LeaderBoard isLoaded={() => setLoad()} />
                 {/* <FeaturedTweet /> */}
             </div>

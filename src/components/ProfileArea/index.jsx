@@ -5,7 +5,7 @@ import { db } from '@/firebase'
 import { ref, onValue } from 'firebase/database'
 
 
-export default function ProfileArea({ handle, id, isLoaded }) {
+export default function ProfileArea({ handle, id, isLoaded}) {
     const [user, setUser] = useState({})
 
     useEffect(() => {
