@@ -5,7 +5,7 @@ import ProfileArea from "@/components/ProfileArea";
 import QuoteBlock from "@/components/QuoteBlock";
 import useUserAuth from "@/hooks/useUserAuth";
 import { useEffect, useState } from "react";
-import { setAlert } from "@/mixins";
+import { closeAlert, setAlert } from "@/mixins";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase";
@@ -17,15 +17,19 @@ function connect({ currentUser, getUserData }) {
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
-      }
+    }
     useEffect(() => {
-        if(!user) {
-            router.push('/')
+        setAlert('ᴘᴀᴛɪᴇɴᴄᴇ ɪꜱ ᴡʜᴀᴛ ᴅɪꜰꜰᴇʀꜱ ᴜꜱ', `loading your profile...`)
+    }, [])
+    useEffect(() => {
+        if (!loading && loaded) {
+          closeAlert()
+            if (!user) {
+                router.push('/')
+            }
+            closeAlert()
         }
-       if (!loading && loaded) {
-         swal.close()
-        }
-      }, [user, loading, loaded]);
+    }, [user, loading, loaded]);
 
     const setLoad = () => {
         setLoaded(true)
@@ -35,7 +39,7 @@ function connect({ currentUser, getUserData }) {
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
                 <ControlArea onSubmit={getUserData} userData={currentUser} />
-                <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle}/>
+                <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle} />
                 <LeaderBoard isLoaded={() => setLoad()} />
                 {/* <FeaturedTweet /> */}
             </div>

@@ -25,3 +25,7 @@ export const setAlert = (title, message) => {
             if (dismiss === 'timer') {}
         });
 }
+
+export const closeAlert = () => {
+    swal.close()
+}
