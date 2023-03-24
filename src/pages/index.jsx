@@ -17,7 +17,7 @@ function index({ currentUser }) {
     useEffect(() => {
         async () => { 
             if (await currentUser) {
-                router.replace('/connect')
+                router.push('/connect')
             }
         }
     }, [currentUser])

@@ -20,7 +20,7 @@ function connect({ currentUser, getUserData }) {
       }
     useEffect(() => {
         if(!user) {
-            router.replace('/')
+            router.push('/')
         }
        if (!loading && loaded) {
          swal.close()

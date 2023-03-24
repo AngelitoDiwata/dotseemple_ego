@@ -24,7 +24,7 @@ export default function useUserAuth(Component) {
       if (loading) {
       }
       if (user) {
-        router.replace('/connect')
+        router.push('/connect')
         setAlert('ᴘᴀᴛɪᴇɴᴄᴇ ɪꜱ ᴡʜᴀᴛ ᴅɪꜰꜰᴇʀꜱ ᴜꜱ', `loading your profile...`)
         getUserData(user.email)
       };

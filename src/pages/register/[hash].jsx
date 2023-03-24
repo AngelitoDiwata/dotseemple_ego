@@ -14,7 +14,7 @@ export default function handler() {
     useEffect(() => {
         if (user) {
             setAlert('Checking if you are part of the circle', `please wait...`)
-            router.replace('/connect')
+            router.push('/connect')
         };
     }, [user, loading]);
 

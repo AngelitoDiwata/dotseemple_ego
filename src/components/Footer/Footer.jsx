@@ -13,7 +13,7 @@ export default function Footer({ isLogin = false }) {
     const onLogout = () => {
         setAlert('Logging out...')
         signOutUser().then(() => {
-            router.replace('/')
+            router.push('/')
         })
     }
     return (
