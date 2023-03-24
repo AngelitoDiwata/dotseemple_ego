@@ -47,7 +47,6 @@ export default function ControlArea({ userData, onSubmit }) {
         e.preventDefault()
         setBtnActive(false)
         const userCode = code.trim()
-        setAlert('validating...')
         get(query(ref(db, '/codes'), orderByChild('code'))).then((snapshot) => {
             const codes = Object.values(snapshot.val()).filter((code) => new Date(code.ttl) > new Date())
             if (userCode === '') {
@@ -57,13 +56,14 @@ export default function ControlArea({ userData, onSubmit }) {
             } else if (userData.hasOwnProperty('collections') && currentCodes.includes(userCode)) {
                 setAlert('', 'Code already claimed!')
             } else {
+                setAlert('validating...')
                 incrementUserPoint({
                     collections: userData.hasOwnProperty('collections') ? [...userData.collections, userCode] : [userCode],
                     uuid: userData.uuid
                 })
-                onSubmit(userData.email)
                 swal.close()
                 setAlert('', 'Valid code. Dot has been credited. Thanks!')
+                onSubmit(userData.email)
                 setCode('')
             }
         })
