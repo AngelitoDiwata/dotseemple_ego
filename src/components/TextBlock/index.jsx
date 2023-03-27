@@ -17,7 +17,7 @@ export default function TextBlock({ label, placeholder, onChange, errorMsg, val 
                 <input autoComplete='false' value={value} onChange={(e) => setValue(e.target.value)} type="text" placeholder={placeholder} className="input bg-black text-white input-bordered w-full" />
             </label>
             {
-                errorMsg && <label className="label">
+                errorMsg && <label className="label text-right px-3">
                     <span className="label-text-alt"></span>
                     <span className="label-text-alt text-rose-300 pr-3">{errorMsg}</span>
                 </label>

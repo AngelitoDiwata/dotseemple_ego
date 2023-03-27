@@ -88,5 +88,5 @@ export async function updateCredentials(data) {
 }
 
 export async function updateProfile(data) {
-    return await (update(ref(db, `data/${data.uuid}`), { bio: data.bio, wallet: data.wallet, role: data.role }))
+    return await (update(ref(db, `data/${data.uuid}`), { bio: data.bio, role: data.role }))
 }

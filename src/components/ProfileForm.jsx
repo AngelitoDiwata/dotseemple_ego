@@ -50,9 +50,9 @@ export default function ProfileForm({ uuid, submitData }) {
 
     const validate = () => {
         return {
-            isValidEmail: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email), errMsg: 'Please provide valid email address.' },
+            isValidEmail: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email), errMsg: 'Please provide a valid email address that you will use permanently in this seemple site.' },
             isValidBio: { value: bio.trim().length > 0, errMsg: 'Please provide valid bio.' },
-            isValidWallet: { value: isAddress(wallet), errMsg: 'Please provide valid wallet address.' },
+            isValidWallet: { value: isAddress(wallet), errMsg: 'Please provide a valid wallet address that you will use permanently in this seemple site.' },
             isValidRole: { value: RoleList.includes(role), errMsg: 'Please select a valid role.' },
             isValidPassword: { value: password.trim().length > 8, errMsg: 'Password should be more than 8 characters' },
             isPasswordMatch: { value: password === confPass && password.trim().length > 8, errMsg: 'Passwords don\'t match.' },
@@ -93,7 +93,7 @@ export default function ProfileForm({ uuid, submitData }) {
             <SelectBlock errorMsg={!getErrorMessages()[3].value && getErrorMessages()[3].errMsg} items={RoleList} placeholder="Select your Web3 role:" onChange={(value) => setRole(value)} />
             <PassBlock errorMsg={!getErrorMessages()[4].value && getErrorMessages()[4].errMsg} label="Create Password" placeholder="Strong password" onChange={(value) => setPassword(value)} />
             <PassBlock errorMsg={!getErrorMessages()[5].value && getErrorMessages()[5].errMsg} label="Confirm Password" placeholder="Confirm password" onChange={(value) => setConfPass(value)} />
-            <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid." onChange={(value) => setUnderstood(value)} />
+            <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid. (Email and wallet address can't be change afterwards.)" onChange={(value) => setUnderstood(value)} />
             <div className='w-full flex flex-row items-center justify-end'>
                 <button className="btn btn-outline text-white" onClick={submit}>Update profile</button>
             </div>
