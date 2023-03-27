@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import { db } from '@/firebase'
 import { ref, onValue } from "firebase/database";
-export default function ProfileForm({ uuid = '00060060-d931-4e10-9b8a-e9227f54dae9', setData, submitData }) {
+import PassBlock from './PassBlock';
+import SelectBlock from './SelectBlock';
+import TextBlock from './TextBlock';
+import CheckBlock from './CheckBlock';
+import { isAddress } from 'ethereum-address'
+import { setAlert } from '@/mixins';
+
+export default function ProfileForm({ uuid, submitData }) {
     const [handle, setHandle] = useState('')
     const [email, setEmail] = useState('')
     const [bio, setBio] = useState('')
     const [wallet, setWallet] = useState('')
     const [role, setRole] = useState('Select your Web3 role:')
+    const [password, setPassword] = useState('')
+    const [confPass, setConfPass] = useState('')
     const [understood, setUnderstood] = useState(false)
+    const RoleList = ['DEGEN',
+        'COMMUNITY BUILDER',
+        'COLLAB MANAGER',
+        'ARTIST',
+        'FOUNDER',
+        'CONTENT WRITER',
+        'ADVISOR',
+        'ALPHA CALLER']
 
     useEffect(() => {
         fetchDB(uuid)
     }, [uuid])
-
-    useEffect(() => {
-        setCardData()
-    }, [handle, email, bio, wallet, role])
 
 
     const fetchDB = (id) => {
@@ -35,64 +48,56 @@ export default function ProfileForm({ uuid = '00060060-d931-4e10-9b8a-e9227f54da
         setWallet(data.wallet)
     }
 
-    const setCardData = () => {
-        setData({
-            handle,
-            email,
-            bio,
-            wallet,
-            role,
+    const validate = () => {
+        return {
+            isValidEmail: { value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email), errMsg: 'Please provide a valid email address that you will use permanently in this seemple site.' },
+            isValidBio: { value: bio.trim().length > 0, errMsg: 'Please provide valid bio.' },
+            isValidWallet: { value: isAddress(wallet), errMsg: 'Please provide a valid wallet address that you will use permanently in this seemple site.' },
+            isValidRole: { value: RoleList.includes(role), errMsg: 'Please select a valid role.' },
+            isValidPassword: { value: password.trim().length > 8, errMsg: 'Password should be more than 8 characters' },
+            isPasswordMatch: { value: password === confPass && password.trim().length > 8, errMsg: 'Passwords don\'t match.' },
+            isUnderstood: { value: understood === true, errMsg: 'Please agree to the condition.' },
+        }
+    }
+
+    const getErrorMessages = () => {
+        return Object.values(validate()).map((value) => {
+            return value
         })
     }
 
     const submit = () => {
-        /**
-         * VALIDATIONS TODO
-         */
-        if (understood === true) {
-            submitData()
+        if (!Object.values(validate()).map((item) => item.value).includes(false)) {
+            submitData({
+                uuid,
+                email,
+                bio,
+                wallet,
+                role,
+                password,
+            })
+        } else {
+            setAlert('Please provide valid details.')
         }
     }
 
-     
-    return (
-        <div className='flex flex-col items-start justify-around space-y-3 px-5 md:px-0 pt-5 h-fit'>
-            <span className='text-lg font-bold text-white'>Your details:</span>
-            <div className="form-control w-full">
-                <label className="input-group">
-                    <span>Handle</span>
-                    <input disabled value={handle} type="text" placeholder="@twitter_handle" className="input input-bordered w-full" />
-                </label>
+
+    return (handle ?
+        <div className='overflow-scroll flex flex-col items-center justify-around space-y-5 px-5 md:px-0 pt-5 h-fit mb-20 bg-black text-white m-auto w-full md:w-1/2 lg:w-1/3'>
+            <span className='text-sm md:text-lg font-light my-5 text-white'>Provide your details, <span className='font-bold'>{handle}</span>:</span>
+            <TextBlock errorMsg={!getErrorMessages()[0].value && getErrorMessages()[0].errMsg} label="Email" placeholder="Example: info@site.com" onChange={(value) => setEmail(value)} />
+            <div className='w-full'>
+                <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="textarea textarea-lg w-full bg-black text-white resize-none border border-white rounded-lg" placeholder="Short bio (required)"></textarea>
             </div>
-            <div className="form-control w-full">
-                <label className="input-group">
-                    <span>Email</span>
-                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="info@site.com" className="input input-bordered w-full" />
-                </label>
-            </div>
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="textarea textarea-lg w-full resize-none" placeholder="Short bio"></textarea>
-            <div className="form-control w-full">
-                <label className="input-group">
-                    <span>Wallet</span>
-                    <input value={wallet} onChange={(e) => setWallet(e.target.value)} type="text" placeholder="0xb794f5ea0ba39494ce839613fffba74279579268" className="input input-bordered w-full" />
-                </label>
-            </div>
-            <select value={role} onChange={(e) => setRole(e.target.value)} defaultValue={'Select your Web3 role:'} className="select select-bordered w-full">
-                <option disabled>Select your Web3 role:</option>
-                <option>Buidler</option>
-                <option>Artist</option>
-                <option>Influencer</option>
-                <option>Flipper/Trader</option>
-            </select>
-            <div className="form-control w-full">
-                <label className="label cursor-pointer flex items-center justify-between space-x-3 w-full">
-                    <span className="label-text text-justify w-3/4">I made sure that all the details here are valid.</span>
-                    <input checked={understood} onChange={(e) => setUnderstood(e.target.checked)} type="checkbox" className="checkbox border-2 border-white text-white" />
-                </label>
-            </div>
+            <TextBlock errorMsg={!getErrorMessages()[2].value && getErrorMessages()[2].errMsg} label="Wallet" placeholder={"Example: 0xb794f5ea0ba39494fe839913fffba74279579268"} onChange={(value) => setWallet(value)} />
+            <SelectBlock errorMsg={!getErrorMessages()[3].value && getErrorMessages()[3].errMsg} items={RoleList} placeholder="Select your Web3 role:" onChange={(value) => setRole(value)} />
+            <PassBlock errorMsg={!getErrorMessages()[4].value && getErrorMessages()[4].errMsg} label="Create Password" placeholder="Strong password" onChange={(value) => setPassword(value)} />
+            <PassBlock errorMsg={!getErrorMessages()[5].value && getErrorMessages()[5].errMsg} label="Confirm Password" placeholder="Confirm password" onChange={(value) => setConfPass(value)} />
+            <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid. (Email and wallet address can't be change afterwards.)" onChange={(value) => setUnderstood(value)} />
             <div className='w-full flex flex-row items-center justify-end'>
-                <button className="btn btn-outline" onClick={submit}>Update profile</button>
+                <button className="btn btn-outline text-white" onClick={submit}>Update profile</button>
             </div>
-        </div>
+
+        </div> : <div className='w-full h-screen flex flex-row items-center justify-center bg-black text-white'><span>Loading...</span></div>
     )
 }

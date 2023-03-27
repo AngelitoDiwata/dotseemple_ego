@@ -5,6 +5,7 @@ import swal from 'sweetalert';
 
 export default function ControlArea({ userData, onSubmit }) {
     const [activeCodes, setActiveCodes] = useState(0)
+    const [totalCodes, setTotalCodes] = useState(0)
     const [code, setCode] = useState('')
     const [currentCodes, setCurrentCodes] = useState([])
     const [btnActive, setBtnActive] = useState(true)
@@ -13,15 +14,19 @@ export default function ControlArea({ userData, onSubmit }) {
         onValue(ref(db, `codes`), (_) => {
             get(query(ref(db, '/codes'), orderByChild('code'))).then((snapshot) => {
                 setActiveCodes(Object.values(snapshot.val()).filter((code) => new Date(code.ttl) > new Date()).length)
+                setTotalCodes(Object.values(snapshot.val()).length + 21)
             })
         });
+    }, [])
+
+    useEffect(() => {
         onValue(ref(db, `data/${userData.uuid}`), (snapshot) => {
             const res = snapshot.val()
             if (res !== null) {
                 setCurrentCodes(res.collections)
             }
         });
-    }, [])
+    }, [userData])
 
     const setAlert = (title, message) => {
         swal({
@@ -55,8 +60,8 @@ export default function ControlArea({ userData, onSubmit }) {
                     collections: userData.hasOwnProperty('collections') ? [...userData.collections, userCode] : [userCode],
                     uuid: userData.uuid
                 })
-                onSubmit()
                 setAlert('', 'Valid code. Dot has been credited. Thanks!')
+                onSubmit(userData.email)
                 setCode('')
             }
         })
@@ -70,7 +75,10 @@ export default function ControlArea({ userData, onSubmit }) {
                     <span className='text-white'>
                         {activeCodes}
                     </span>
-                    <span className='text-base'>active code{activeCodes > 1 && 's'}</span>
+                    <span className='text-base'>active code{activeCodes > 1 && 's'} out of </span>
+                    <span>
+                        {totalCodes}
+                    </span>
                 </div>
                 <input value={code} onChange={(e) => setCode(e.target.value)} type="text" placeholder="C O D E" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-black w-full max-w-xs" />
             </div>

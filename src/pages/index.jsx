@@ -1,22 +1,68 @@
-import React from 'react'
-import { twitter } from 'react-icons-kit/icomoon/'
-import { Icon } from 'react-icons-kit'
+import React, { useState, useEffect } from 'react'
 import Footer from '@/components/Footer/Footer'
+import TextBlock from '@/components/TextBlock'
+import PassBlock from '@/components/PassBlock'
+import useUserAuth from '@/hooks/useUserAuth'
+import { getUserByEmail, signIn, signOutUser } from '@/firebase'
+import { useRouter } from 'next/router'
+import { setAlert } from '@/mixins'
 
-export default function index() {
+function index({ currentUser }) {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const router = useRouter()
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
+    useEffect(() => {
+        async () => {
+            if (await currentUser) {
+                router.push('/connect')
+            }
+        }
+    }, [currentUser])
+
+    const getUserData = (email) => {
+        getUserByEmail(email).then((snapshot) => {
+            const res = snapshot.val()
+            if (res) {
+                router.push('/connect')
+            } else {
+                signOutUser()
+                router.push('/')
+                setAlert('You are not part of the circle yet')
+            }
+        })
+    }
+
+    const onLogin = (e) => {
+        e.preventDefault()
+        setAlert('Logging in...')
+        signIn(email, password).then(
+            () => {
+                getUserData(email)
+            }
+        ).catch((_) => {
+            setAlert('Incorrect Credentials.')
+        })
+    }
+
     return (
         <div className='h-screen w-full flex flex-col items-center justify-between bg-black'>
-            <div className="card transition-all w-11/12 md:w-80 mt-10 bg-neutral-800 shadow-xl shadow-neutral-900">
-                <figure><img className='w-full' src="/breakfast.jpg" alt="breakfast" /></figure>
-                <div className="card-body">
-                    <span className="card-title text-white font-thin flex flex-col items-center justify-center tracking-widest leading-6 text-justify">
-                        <span className='tracking-widest text-neutral-200 font-light text-sm text-center indent-5'>Seemple-site is under scheduled maintainance. dot be back shortly.</span>
-                        <span className='tracking-widest text-neutral-400 font-light text-center text-xs'> ᴍᴇᴀɴᴡʜɪʟᴇ, ʜᴇʀᴇ'ꜱ ꜰᴏʀ ʙʀᴇᴀᴋꜰᴀꜱᴛ:</span>
-                    </span>
-                    <a className="text-center font-thin hover:scale-110 transition-all text-sm text-white hover:underline" href="https://bit.ly/scratch-paper" target="_blank">bit.ly/scratch-paper</a>
-                </div>
+            <div className="card transition-all flex flex-row items-center justify-center h-screen w-11/12 md:w-80 mt-10">
+                <form className='w-fit h-fit m-auto flex flex-col items-center justify-center space-y-2'>
+                    <TextBlock label="email" onChange={value => setEmail(value)} />
+                    <PassBlock label="password" onChange={value => setPassword(value)} />
+                    <button onClick={(e) => onLogin(e)} className='w-full flex flex-row items-center justify-end space-x-2 mr-2 self-end text-white outline-none'>
+                        <span className='text-5xl'>⦿</span> <span className='text-xs'>Login</span>
+                    </button>
+                </form>
             </div>
-           <Footer />
+            <Footer isLogin={true} />
         </div>
     )
 }
+
+export default useUserAuth(index)
+
+
