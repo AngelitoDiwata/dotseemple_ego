@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
-export default function TextBlock({ label, placeholder, onChange, errorMsg }) {
-    const [value, setValue] = useState('')
+export default function TextBlock({ label, placeholder, onChange, errorMsg, val = '' }) {
+    const [value, setValue] = useState(val)
 
     useEffect(() => {
         onChange(value)
     }, [value])
+
+    useEffect(() => {
+        setValue(val)
+    }, [val])
     return (
         <div className="form-control w-full border rounded-lg">
             <label className="input-group">

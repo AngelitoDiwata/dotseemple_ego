@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function SelectBlock({ items, placeholder, onChange, errorMsg}) {
+export default function SelectBlock({ items, placeholder, onChange, errorMsg, val = ''}) {
     const [value, setValue] = useState(placeholder)
 
     useEffect(() => {

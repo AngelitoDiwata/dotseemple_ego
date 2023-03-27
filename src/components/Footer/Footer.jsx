@@ -5,11 +5,11 @@ import { signOutUser } from '@/firebase'
 import { useRouter } from 'next/router'
 import { setAlert } from '@/mixins'
 
-export default function Footer({ isLogin = false }) {
+export default function Footer({ isLogin = false, openProfile }) {
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
-      }
+    }
     const onLogout = () => {
         setAlert('Logging out...')
         signOutUser().then(() => {
@@ -23,6 +23,8 @@ export default function Footer({ isLogin = false }) {
                 <Icon icon={twitter} />
             </a>{
                 !isLogin && <>
+                    <span className="mx-10">|</span>
+                    <button className='cursor-pointer' onClick={() => openProfile(true)}>Profile</button>
                     <span className="mx-10">|</span>
                     <span className='cursor-pointer' onClick={onLogout}>Log out</span></>
             }

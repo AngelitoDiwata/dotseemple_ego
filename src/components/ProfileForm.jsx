@@ -6,6 +6,7 @@ import SelectBlock from './SelectBlock';
 import TextBlock from './TextBlock';
 import CheckBlock from './CheckBlock';
 import { isAddress } from 'ethereum-address'
+import { setAlert } from '@/mixins';
 
 export default function ProfileForm({ uuid, submitData }) {
     const [handle, setHandle] = useState('')
@@ -75,6 +76,8 @@ export default function ProfileForm({ uuid, submitData }) {
                 role,
                 password,
             })
+        } else {
+            setAlert('Please provide valid details.')
         }
     }
 
@@ -92,7 +95,7 @@ export default function ProfileForm({ uuid, submitData }) {
             <PassBlock errorMsg={!getErrorMessages()[5].value && getErrorMessages()[5].errMsg} label="Confirm Password" placeholder="Confirm password" onChange={(value) => setConfPass(value)} />
             <CheckBlock errorMsg={!getErrorMessages()[6].value && getErrorMessages()[6].errMsg} label="I made sure that all the details here are valid." onChange={(value) => setUnderstood(value)} />
             <div className='w-full flex flex-row items-center justify-end'>
-                <button disabled={Object.values(validate()).map((item) => item.value).includes(false)} className="btn btn-outline text-white" onClick={submit}>Update profile</button>
+                <button className="btn btn-outline text-white" onClick={submit}>Update profile</button>
             </div>
 
         </div> : <div className='w-full h-screen flex flex-row items-center justify-center bg-black text-white'><span>Loading...</span></div>

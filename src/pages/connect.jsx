@@ -10,10 +10,12 @@ import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase";
 import swal from "sweetalert";
+import ProfileEdit from "@/components/ProfileEdit";
 
 function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
     const [user, loading, error] = useAuthState(auth);
+    const [profileVisible, setProfileVisible] = useState(false)
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
@@ -23,7 +25,7 @@ function connect({ currentUser, getUserData }) {
     }, [])
     useEffect(() => {
         if (!loading && loaded) {
-          closeAlert()
+            closeAlert()
             if (!user) {
                 router.push('/')
             }
@@ -34,7 +36,11 @@ function connect({ currentUser, getUserData }) {
     const setLoad = () => {
         setLoaded(true)
     }
-    return (
+
+    const changeVisibility = (value) => {
+        setProfileVisible(value)
+    }
+    return (profileVisible ? <ProfileEdit setVisibility={() => changeVisibility(false)} onSubmit={getUserData} visible={profileVisible} details={{ uuid: currentUser.uuid, email: currentUser.email, handle: currentUser.handle, email: currentUser.email, bio: currentUser.bio, wallet: currentUser.wallet, role: currentUser.role }} /> :
         <div className="bg-black w-full h-fit flex flex-col items-center justify-between">
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
@@ -43,7 +49,7 @@ function connect({ currentUser, getUserData }) {
                 <LeaderBoard isLoaded={() => setLoad()} />
                 {/* <FeaturedTweet /> */}
             </div>
-            <Footer />
+            <Footer openProfile={(value) => changeVisibility(value)} />
         </div>
     )
 };

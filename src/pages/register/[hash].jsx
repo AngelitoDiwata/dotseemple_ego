@@ -4,6 +4,7 @@ import { decryptHandle, setAlert } from '@/mixins';
 import { auth, createUser, getUserByHandle, signIn, updateCredentials } from '@/firebase';
 import ProfileForm from '@/components/ProfileForm';
 import { useAuthState } from "react-firebase-hooks/auth";
+import { isAddress } from 'ethereum-address';
 
 export default function handler() {
     const router = useRouter()
@@ -11,26 +12,15 @@ export default function handler() {
     const hash = router.query.hash
     const [currentUser, setCurrentUser] = useState('')
 
-    useEffect(() => {
-        if (user) {
-            setAlert('Checking if you are part of the circle', `please wait...`)
-            router.push('/connect')
-        };
-    }, [user, loading]);
-
-    useEffect(() => {
-        if (hash) {
-            getUserByHandle(decryptHandle(hash).toUpperCase()).then((data) => {
-                const res = data.val()
-                if (res) {
-                    const resData = Object.values(res)[0]
-                    setCurrentUser(resData.uuid)
-                } else {
-                    router.push('/')
-                }
-            })
+    const checkIfUserRegistered = (response) => {
+        const resData = Object.values(response)[0]
+        const conditions = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(resData.email) && isAddress(resData.wallet)
+        if (conditions) {
+            router.push('/')
+        } else {
+            setCurrentUser(resData.uuid)
         }
-    }, [hash])
+    }
 
     const submitForm = (data) => {
         createUser(data.email, data.password).then(() => {
@@ -48,6 +38,28 @@ export default function handler() {
             })
         })
     }
+    
+
+    useEffect(() => {
+        if (user) {
+            setAlert('Checking if you are part of the circle', `please wait...`)
+            router.push('/connect')
+        };
+    }, [user, loading]);
+
+    useEffect(() => {
+        if (hash) {
+            getUserByHandle(decryptHandle(hash).toUpperCase()).then((data) => {
+                const res = data.val()
+                if (res) {
+                    checkIfUserRegistered(res)
+                } else {
+                    router.push('/')
+                }
+            })
+        }
+    }, [hash])
+
     return (
         <ProfileForm uuid={currentUser} submitData={submitForm} />
     )

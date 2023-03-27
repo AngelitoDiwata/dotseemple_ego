@@ -3,7 +3,7 @@ import Footer from '@/components/Footer/Footer'
 import TextBlock from '@/components/TextBlock'
 import PassBlock from '@/components/PassBlock'
 import useUserAuth from '@/hooks/useUserAuth'
-import { getUserByEmail, signIn } from '@/firebase'
+import { getUserByEmail, signIn, signOutUser } from '@/firebase'
 import { useRouter } from 'next/router'
 import { setAlert } from '@/mixins'
 
@@ -13,9 +13,9 @@ function index({ currentUser }) {
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
-      }
+    }
     useEffect(() => {
-        async () => { 
+        async () => {
             if (await currentUser) {
                 router.push('/connect')
             }
@@ -28,14 +28,15 @@ function index({ currentUser }) {
             if (res) {
                 router.push('/connect')
             } else {
+                signOutUser()
+                router.push('/')
                 setAlert('You are not part of the circle yet')
             }
         })
     }
 
-
-
-    const onLogin = () => {
+    const onLogin = (e) => {
+        e.preventDefault()
         setAlert('Logging in...')
         signIn(email, password).then(
             () => {
@@ -49,13 +50,13 @@ function index({ currentUser }) {
     return (
         <div className='h-screen w-full flex flex-col items-center justify-between bg-black'>
             <div className="card transition-all flex flex-row items-center justify-center h-screen w-11/12 md:w-80 mt-10">
-                <div className='w-fit h-fit m-auto flex flex-col items-center justify-center space-y-2'>
+                <form className='w-fit h-fit m-auto flex flex-col items-center justify-center space-y-2'>
                     <TextBlock label="email" onChange={value => setEmail(value)} />
                     <PassBlock label="password" onChange={value => setPassword(value)} />
-                    <button onClick={onLogin} className='w-full flex flex-row items-center justify-end space-x-2 mr-2 self-end text-white outline-none'>
+                    <button onClick={(e) => onLogin(e)} className='w-full flex flex-row items-center justify-end space-x-2 mr-2 self-end text-white outline-none'>
                         <span className='text-5xl'>⦿</span> <span className='text-xs'>Login</span>
                     </button>
-                </div>
+                </form>
             </div>
             <Footer isLogin={true} />
         </div>

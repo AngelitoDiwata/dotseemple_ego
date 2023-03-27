@@ -86,3 +86,7 @@ export async function createUser(email, password) {
 export async function updateCredentials(data) {
     return await update(ref(db, `data/${data.uuid}`), { wallet: data.wallet, email: data.email.toUpperCase(), bio: data.bio, role: data.role })
 }
+
+export async function updateProfile(data) {
+    return await (update(ref(db, `data/${data.uuid}`), { bio: data.bio, wallet: data.wallet, role: data.role }))
+}
