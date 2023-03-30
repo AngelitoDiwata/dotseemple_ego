@@ -92,5 +92,5 @@ export async function updateProfile(data) {
 }
 
 export async function submitLink(data) {
-    return await (update(ref(db, `data/${data.uuid}`), { linkEntry: { date: new Date(), link: data.link, status: 'PENDING' } }))
+    return await (update(ref(db, `data/${data.uuid}/linkEntry`), { date: new Date(), link: data.link, status: 'PENDING' }))
 }

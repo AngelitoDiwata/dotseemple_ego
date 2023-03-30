@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import { closeAlert, setAlert } from "@/mixins";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
 import ProfileEdit from "@/components/ProfileEdit";
 import LinkSubmission from "@/components/LinkSubmission";
+import { onValue, ref } from "firebase/database";
 
 function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
@@ -20,7 +21,16 @@ function connect({ currentUser, getUserData }) {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
-    
+
+    useEffect(() => {
+        onValue(ref(db, `data/${currentUser.uuid}`), (snapshot) => {
+            if (snapshot.val()) {
+                const res = Object.values(snapshot.val())[0]
+                getUserData(res.email)
+            }
+        })
+    }, [])
+
     useEffect(() => {
         setAlert('ᴘᴀᴛɪᴇɴᴄᴇ ɪꜱ ᴡʜᴀᴛ ᴅɪꜰꜰᴇʀꜱ ᴜꜱ', `loading your profile...`)
     }, [])
@@ -36,7 +46,7 @@ function connect({ currentUser, getUserData }) {
     }, [user, loading, loaded]);
 
     useEffect(() => {
-       console.log('triggered')
+        console.log('triggered')
     }, [currentUser])
 
     const setLoad = () => {
