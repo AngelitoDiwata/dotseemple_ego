@@ -47,7 +47,7 @@ export function getUserByEmail(email) {
     return get(query(ref(db, '/data'), orderByChild('email'), equalTo(email.toUpperCase())))
 }
 
-/**
+/** 
  * Get top 40
  */
 
