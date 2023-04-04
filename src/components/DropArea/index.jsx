@@ -2,7 +2,7 @@ import { deductPoints, getDrops, onParticipate } from '@/firebase'
 import { setAlert } from '@/mixins'
 import React, { useEffect, useState } from 'react'
 
-export default function DropArea({ visible, currentUser, participate, setVisible }) {
+export default function DropArea({ inSufficient, Claimed, visible, currentUser, participate, setVisible }) {
 
   const [modalVisible, setModalVisible] = useState(false)
   const [drops, setDrops] = useState([{}])
@@ -18,7 +18,13 @@ export default function DropArea({ visible, currentUser, participate, setVisible
   }, [])
 
   const openModal = (mode) => {
-    return setModalVisible(() => mode)
+    if (inSufficient === true) {
+      setAlert('', 'You do not have enough points to join the whitelist')
+    } else if (Claimed === true) {
+      setAlert('', 'Your wallet address has already been collected.')
+    } else {
+      setModalVisible(() => mode)
+    }
   }
 
   return (visible &&
@@ -26,7 +32,7 @@ export default function DropArea({ visible, currentUser, participate, setVisible
       <ParticipateModal participate={participate} setModalVisible={setModalVisible} dropKey={dropKey} user={currentUser} openModal={openModal} visibility={modalVisible} />
       <span>{drops.at(-1).title} ends in</span>
       <Countdown setModalVisible={(value) => setVisible(value)} countDownDate={drops.at(-1).ttl} />
-      <button onClick={() => openModal(true)} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-full">PARTICIPATE</button>
+      <button onClick={() => openModal(true)} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-full">JOIN WHITELIST</button>
     </div>
   )
 }
@@ -50,7 +56,7 @@ function Countdown({ countDownDate, setModalVisible }) {
 
         // Output the result in an element with id="demo"
         setTime(`${days}:${hours}:${minutes}:${seconds}`);
-        
+
         if (distance <= 0) {
           clearInterval(x)
           setModalVisible(false)
@@ -86,12 +92,12 @@ function ParticipateModal({ visibility, openModal, dropKey, user, setModalVisibl
       collections: user.collections.slice(20, user.collections.length)
     }).then(() => {
       participate()
-      setAlert('Successfully participated on current drop!')
+      setAlert('Wallet address collected successfully (20 pts deducted).')
       setModalVisible(false)
     })
   }
   return visibility ? <div style={{ height: '1150px' }} className='w-full z-50 bg-black absolute flex flex-col items-center justify-center'>
-    <span className='text-white mx-auto text-xl w-11/12 md:w-1/3 text-justify'>Clicking this button means you will be added to the FCFS whitelist to mint the collab edition. This costs 20 points.</span>
+    <span className='text-white mx-auto w-11/12 md:w-1/3 text-justify'>Clicking this button means you will be added to the FCFS whitelist to mint the collab edition. This costs <span className='font-bold'>20</span> points.</span>
     <div className='w-11/12 md:w-1/3 mx-auto flex flex-row items-center justify-center space-x-2 my-3'>
       <button onClick={participateAction} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-1/2 font-bold border-4">PROCEED</button>
       <button onClick={() => openModal(false)} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-1/2">Cancel</button>

@@ -18,7 +18,10 @@ function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
     const [user, loading, error] = useAuthState(auth);
     const [profileVisible, setProfileVisible] = useState(false)
-    const [countDownVisible, setCountDownVisible] = useState(false)
+    const [countDownVisible, setCountDownVisible] = useState(true)
+    const [insufficient, setInsufficient] = useState(false)
+    const [claimed, setClaimed] = useState(false)
+
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
@@ -43,21 +46,22 @@ function connect({ currentUser, getUserData }) {
     }, [user, loading, loaded]);
 
     const checkParticipation = () => {
-        if (currentUser.connections >= 20) {
-            getDrops().then((snap) => {
-                console.log(Object.values(snap.val()).at(-1).participants)
-                if (currentUser && Object.values(snap.val()).at(-1).participants) {
-                    const entry = Object.values(Object.values(snap.val()).at(-1).participants).filter((entry) => {
-                        return entry.handle === currentUser.handle
-                    })
-                    setCountDownVisible(entry.length < 1)
-                } else if (Object.values(snap.val()).at(-1).participants === undefined) {
-                    setCountDownVisible(true)
-                }
-            })
-        } else {
-            setCountDownVisible(false)
+        if (currentUser.connections < 20) {
+            setInsufficient(true)
         }
+        getDrops().then((snap) => {
+            if (snap.val() && currentUser && Object.values(snap.val()).at(-1).participants) {
+                const entry = Object.values(Object.values(snap.val()).at(-1).participants).filter((entry) => {
+                    return entry.handle === currentUser.handle
+                })
+                setCountDownVisible(true)
+                setClaimed(entry.length > 0)
+            } else if (snap.val() && Object.values(snap.val()).at(-1).participants === undefined) {
+                setCountDownVisible(true)
+            } else if (!snap.val()) {
+                setCountDownVisible(false)
+            }
+        })
     }
 
     const setLoad = () => {
@@ -71,7 +75,7 @@ function connect({ currentUser, getUserData }) {
         <div className="bg-black w-full h-screen overflow-scroll flex flex-col items-center justify-between">
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
-                <DropArea setVisible={(value) => setCountDownVisible(value)} participate={() => checkParticipation()} visible={countDownVisible} currentUser={currentUser} />
+                <DropArea setVisible={(value) => setCountDownVisible(value)} participate={() => checkParticipation()} visible={countDownVisible} Claimed={claimed} inSufficient={insufficient} currentUser={currentUser} />
                 <ControlArea onSubmit={getUserData} userData={currentUser} />
                 <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle} />
                 <LeaderBoard isLoaded={() => setLoad()} />
