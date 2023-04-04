@@ -28,7 +28,7 @@ export default function DropArea({ inSufficient, Claimed, visible, currentUser, 
   }
 
   return (visible &&
-    <div className='w-3/4 md:w-1/2 lg:w-2/3 flex flex-col space-y-2 items-center justify-center py-5 px-10'>
+    <div className='w-3/4 md:w-1/2 lg:w-2/3 flex min-h-max flex-col space-y-2 items-center justify-center py-5 px-10'>
       <ParticipateModal participate={participate} setModalVisible={setModalVisible} dropKey={dropKey} user={currentUser} openModal={openModal} visibility={modalVisible} />
       <span>{drops.at(-1).title} ends in</span>
       <Countdown setModalVisible={(value) => setVisible(value)} countDownDate={drops.at(-1).ttl} />
@@ -96,7 +96,7 @@ function ParticipateModal({ visibility, openModal, dropKey, user, setModalVisibl
       setModalVisible(false)
     })
   }
-  return visibility ? <div style={{ height: '1150px' }} className='w-full z-50 bg-black absolute flex flex-col items-center justify-center'>
+  return visibility ? <div style={{ height: '1500px' }} className='w-full z-50 h-screen bg-black absolute flex flex-col items-center justify-center px-5'>
     <span className='text-white mx-auto w-11/12 md:w-1/3 text-justify'>Clicking this button means you will be added to the FCFS whitelist to mint the collab edition. This costs <span className='font-bold'>20</span> points.</span>
     <div className='w-11/12 md:w-1/3 mx-auto flex flex-row items-center justify-center space-x-2 my-3'>
       <button onClick={participateAction} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-1/2 font-bold border-4">PROCEED</button>

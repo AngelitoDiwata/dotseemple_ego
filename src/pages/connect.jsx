@@ -18,7 +18,7 @@ function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
     const [user, loading, error] = useAuthState(auth);
     const [profileVisible, setProfileVisible] = useState(false)
-    const [countDownVisible, setCountDownVisible] = useState(true)
+    const [countDownVisible, setCountDownVisible] = useState(false)
     const [insufficient, setInsufficient] = useState(false)
     const [claimed, setClaimed] = useState(false)
 
