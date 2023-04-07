@@ -21,14 +21,20 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
     }
 
     return (eligible &&
-        <div className='text-white flex flex-row items-end justify-center space-x-2 w-full md:w-3/4 m-auto border border-dashed p-3 rounded-lg'>
-            <div className='flex flex-col items-center justify-center space-y-1 w-fit'>
-                <div className='w-full flex flex-row items-center justify-start space-x-3'>
-                    <span className='text-base'>Submit a tweet link</span>
+
+        <div className="indicator w-11/12 md:w-fit">
+            <span className="indicator-item badge badge-outline bg-black">
+                i
+            </span>
+            <div className='text-white flex flex-col items-end justify-center space-y-5 w-full m-auto border border-dashed p-3 rounded-lg'>
+                <div className='flex flex-col items-center justify-center space-y-1 w-full'>
+                    <div className='w-full flex flex-row items-center text-center justify-start space-x-3'>
+                        <span className='text-base text-center w-full'>Submit an interesting tweet link</span> 
+                    </div>  
+                    <input onChange={(e) => setLink(e.target.value)} type="text" placeholder="https://twitter/com" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-black w-full max-w-xs" />
                 </div>
-                <input onChange={(e) => setLink(e.target.value)} type="text" placeholder="Tweet link" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-black w-full max-w-xs" />
+                <button onClick={(e) => linkSubmit(e)} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-full rounded-none">Submit link</button>
             </div>
-            <button onClick={(e) => linkSubmit(e)} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-fit rounded-none">Submit link</button>
         </div>
     )
 }

@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { closeAlert, setAlert } from "@/mixins";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "@/firebase";
+import DropArea from "@/components/DropArea";
+import { auth, db, getDrops } from "@/firebase";
 import ProfileEdit from "@/components/ProfileEdit";
 import LinkSubmission from "@/components/LinkSubmission";
 import { onValue, ref } from "firebase/database";
@@ -17,6 +18,10 @@ function connect({ currentUser, getUserData }) {
     const [loaded, setLoaded] = useState(false)
     const [user, loading, error] = useAuthState(auth);
     const [profileVisible, setProfileVisible] = useState(false)
+    const [countDownVisible, setCountDownVisible] = useState(false)
+    const [insufficient, setInsufficient] = useState(false)
+    const [claimed, setClaimed] = useState(false)
+
     const router = useRouter()
     if (router.isFallback) {
         return <div>Loading...</div>
@@ -36,6 +41,10 @@ function connect({ currentUser, getUserData }) {
     }, [])
 
     useEffect(() => {
+        checkParticipation()
+    }, [currentUser])
+
+    useEffect(() => {
         if (!loading && loaded) {
             closeAlert()
             if (!user) {
@@ -45,6 +54,24 @@ function connect({ currentUser, getUserData }) {
         }
     }, [user, loading, loaded]);
 
+    const checkParticipation = () => {
+        if (currentUser.connections < 20) {
+            setInsufficient(true)
+        }
+        getDrops().then((snap) => {
+            if (snap.val() && currentUser && Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants) {
+                const entry = Object.values(Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants).filter((entry) => {
+                    return entry.handle === currentUser.handle
+                })
+                setCountDownVisible(true)
+                setClaimed(entry.length > 0)
+            } else if (snap.val() && Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants === undefined) {
+                setCountDownVisible(true)
+            } else if (!snap.val()) {
+                setCountDownVisible(false)
+            }
+        })
+    }
     useEffect(() => {
         console.log('triggered')
     }, [currentUser])
@@ -70,9 +97,10 @@ function connect({ currentUser, getUserData }) {
     }
 
     return (profileVisible ? <ProfileEdit setVisibility={() => changeVisibility(false)} onSubmit={getUserData} visible={profileVisible} details={{ uuid: currentUser.uuid, email: currentUser.email, handle: currentUser.handle, email: currentUser.email, bio: currentUser.bio, wallet: currentUser.wallet, role: currentUser.role }} /> :
-        <div className="bg-black w-full h-fit flex flex-col items-center justify-between">
+        <div className="bg-black w-full h-screen overflow-scroll flex flex-col items-center justify-between">
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
+                <DropArea setVisible={(value) => setCountDownVisible(value)} participate={() => checkParticipation()} visible={countDownVisible} Claimed={claimed} inSufficient={insufficient} currentUser={currentUser} />
                 <LinkSubmission user={currentUser} eligible={getSubEligibility()} onSubmit={() => getUserData(currentUser.email)} />
                 <ControlArea onSubmit={getUserData} userData={currentUser} />
                 <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle} />

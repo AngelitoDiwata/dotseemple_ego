@@ -91,6 +91,18 @@ export async function updateProfile(data) {
     return await (update(ref(db, `data/${data.uuid}`), { bio: data.bio, role: data.role }))
 }
 
+export async function getDrops() {
+    return await get(ref(db, '/drops'))
+}
+
+export async function onParticipate(data) {
+    return await (update(ref(db, `drops/${data.dropID}/participants/${data.uuid}`), { wallet: data.wallet, handle: data.handle, date: data.date }))
+}
+
+export async function deductPoints(data) {
+    return await update(ref(db, `/data/${data.uuid}`), { connections: data.collections.length, collections: data.collections });
+}
+
 export async function submitLink(data) {
     return await (update(ref(db, `data/${data.uuid}/linkEntry`), { date: new Date(), link: data.link, status: 'PENDING' }))
 }
