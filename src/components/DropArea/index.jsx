@@ -11,8 +11,8 @@ export default function DropArea({ inSufficient, Claimed, visible, currentUser, 
     getDrops().then((data) => {
       const res = data.val()
       if (res) {
-        setDrops([Object.values(res).at(-1)])
-        setDropKey(Object.keys(res).at(-1))
+        setDrops([Object.values(res).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1)])
+        setDropKey(Object.keys(res).sort((a, b) => new Date(a) - new Date(b)).at(-1))
       }
     })
   }, [])
@@ -30,7 +30,7 @@ export default function DropArea({ inSufficient, Claimed, visible, currentUser, 
   return (visible &&
     <div className='w-3/4 md:w-1/2 lg:w-2/3 flex min-h-max flex-col space-y-2 items-center justify-center py-5 px-10'>
       <ParticipateModal participate={participate} setModalVisible={setModalVisible} dropKey={dropKey} user={currentUser} openModal={openModal} visibility={modalVisible} />
-      <span>{drops.at(-1).title} ends in</span>
+      <span>{drops.at(-1).title} in</span>
       <Countdown setModalVisible={(value) => setVisible(value)} countDownDate={drops.at(-1).ttl} />
       <button onClick={() => openModal(true)} className="btn rounded-none bg-black hover:bg-neutral-900 text-white hover:scale-110 btn-md tracking-widest w-full">JOIN WHITELIST</button>
     </div>

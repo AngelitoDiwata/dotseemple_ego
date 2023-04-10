@@ -102,3 +102,11 @@ export async function onParticipate(data) {
 export async function deductPoints(data) {
     return await update(ref(db, `/data/${data.uuid}`), { connections: data.collections.length, collections: data.collections });
 }
+
+export async function submitLink(data) {
+    return await (update(ref(db, `data/${data.uuid}/linkEntry`), { date: new Date(), link: data.link, status: 'PENDING' }))
+}
+
+export async function getLinkSubContent() {
+    return await get(ref(db, '/linkSub'))
+}

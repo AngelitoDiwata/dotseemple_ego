@@ -8,10 +8,10 @@ import { useEffect, useState } from "react";
 import { closeAlert, setAlert } from "@/mixins";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, getDrops } from "@/firebase";
-import swal from "sweetalert";
-import ProfileEdit from "@/components/ProfileEdit";
 import DropArea from "@/components/DropArea";
+import { auth, db, getDrops } from "@/firebase";
+import ProfileEdit from "@/components/ProfileEdit";
+import LinkSubmission from "@/components/LinkSubmission";
 import { onValue, ref } from "firebase/database";
 
 function connect({ currentUser, getUserData }) {
@@ -26,6 +26,15 @@ function connect({ currentUser, getUserData }) {
     if (router.isFallback) {
         return <div>Loading...</div>
     }
+
+    useEffect(() => {
+        onValue(ref(db, `data/${currentUser.uuid}`), (snapshot) => {
+            if (snapshot.val()) {
+                const res = Object.values(snapshot.val())[0]
+                getUserData(res.email)
+            }
+        })
+    }, [])
 
     useEffect(() => {
         setAlert('ᴘᴀᴛɪᴇɴᴄᴇ ɪꜱ ᴡʜᴀᴛ ᴅɪꜰꜰᴇʀꜱ ᴜꜱ', `loading your profile...`)
@@ -50,19 +59,22 @@ function connect({ currentUser, getUserData }) {
             setInsufficient(true)
         }
         getDrops().then((snap) => {
-            if (snap.val() && currentUser && Object.values(snap.val()).at(-1).participants) {
-                const entry = Object.values(Object.values(snap.val()).at(-1).participants).filter((entry) => {
+            if (snap.val() && currentUser && Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants) {
+                const entry = Object.values(Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants).filter((entry) => {
                     return entry.handle === currentUser.handle
                 })
                 setCountDownVisible(true)
                 setClaimed(entry.length > 0)
-            } else if (snap.val() && Object.values(snap.val()).at(-1).participants === undefined) {
+            } else if (snap.val() && Object.values(snap.val()).sort((a, b) => new Date(a.ttl) - new Date(b.ttl)).at(-1).participants === undefined) {
                 setCountDownVisible(true)
             } else if (!snap.val()) {
                 setCountDownVisible(false)
             }
         })
     }
+    useEffect(() => {
+        console.log('triggered')
+    }, [currentUser])
 
     const setLoad = () => {
         setLoaded(true)
@@ -71,11 +83,25 @@ function connect({ currentUser, getUserData }) {
     const changeVisibility = (value) => {
         setProfileVisible(value)
     }
+
+    const getSubEligibility = () => {
+        try {
+            const d1 = new Date(currentUser.linkEntry.date)
+            const d2 = new Date()
+            const diffTime = (d2 - d1);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays >= 2
+        } catch (_) {
+            return true
+        }
+    }
+
     return (profileVisible ? <ProfileEdit setVisibility={() => changeVisibility(false)} onSubmit={getUserData} visible={profileVisible} details={{ uuid: currentUser.uuid, email: currentUser.email, handle: currentUser.handle, email: currentUser.email, bio: currentUser.bio, wallet: currentUser.wallet, role: currentUser.role }} /> :
         <div className="bg-black w-full h-screen overflow-scroll flex flex-col items-center justify-between">
             <div className="w-full lg:w-1/2 m-auto h-fit flex flex-col items-center justify-center space-y-5">
                 <QuoteBlock />
                 <DropArea setVisible={(value) => setCountDownVisible(value)} participate={() => checkParticipation()} visible={countDownVisible} Claimed={claimed} inSufficient={insufficient} currentUser={currentUser} />
+                <LinkSubmission user={currentUser} eligible={getSubEligibility()} onSubmit={() => getUserData(currentUser.email)} />
                 <ControlArea onSubmit={getUserData} userData={currentUser} />
                 <ProfileArea isLoaded={() => setLoad()} id={currentUser.uuid} handle={currentUser.handle} />
                 <LeaderBoard isLoaded={() => setLoad()} />

@@ -9,6 +9,7 @@ export default function ControlArea({ userData, onSubmit }) {
     const [code, setCode] = useState('')
     const [currentCodes, setCurrentCodes] = useState([])
     const [btnActive, setBtnActive] = useState(true)
+    const [updatedUserData, setUpdatedUserData] = useState(userData)
 
     useEffect(() => {
         onValue(ref(db, `codes`), (_) => {
@@ -23,6 +24,7 @@ export default function ControlArea({ userData, onSubmit }) {
         onValue(ref(db, `data/${userData.uuid}`), (snapshot) => {
             const res = snapshot.val()
             if (res !== null) {
+                setUpdatedUserData(res)
                 setCurrentCodes(res.collections)
             }
         });
@@ -53,15 +55,15 @@ export default function ControlArea({ userData, onSubmit }) {
                 setAlert('', 'Code cannot be empty!')
             } else if (!codes.filter((item) => new Date(item.ttl) > new Date()).map((item) => item.code.trim()).includes(userCode)) {
                 setAlert('', 'Sorry. code is either invalid/expired.')
-            } else if (userData.hasOwnProperty('collections') && currentCodes.includes(userCode)) {
+            } else if (updatedUserData.hasOwnProperty('collections') && currentCodes.includes(userCode)) {
                 setAlert('', 'Code already claimed!')
             } else {
                 incrementUserPoint({
-                    collections: userData.hasOwnProperty('collections') ? [...userData.collections, userCode] : [userCode],
-                    uuid: userData.uuid
+                    collections: updatedUserData.hasOwnProperty('collections') ? [...currentCodes, userCode] : [userCode],
+                    uuid: updatedUserData.uuid
                 })
                 setAlert('', 'Valid code. Dot has been credited. Thanks!')
-                onSubmit(userData.email)
+                onSubmit(updatedUserData.email)
                 setCode('')
             }
         })
