@@ -30,7 +30,7 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
                 link
             })
             onSubmit()
-            setAlert('', title)
+           deduct(e, title)
         } else {
             setAlert('', 'Please enter a valid twitter link.')
         }
@@ -42,7 +42,7 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
                 uuid: user.uuid,
                 collections: user.collections.slice(deductPts, user.collections.length)
             }).then(() => {
-                linkSubmit(e, title)
+                setAlert('', title)
             })
         } else {
             setAlert('', 'insufficient points to submit a link entry')
@@ -59,7 +59,7 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
                     </div>
                     <input onChange={(e) => setLink(e.target.value)} type="text" placeholder="https://twitter/com" className="input text-base font-normal border-white focus:outline-none hover:outline-none bg-black w-full" />
                 </div>
-                <button onClick={(e) => setConfAlert('', okMsg, confMsg, (succTitle) => deduct(e, succTitle))} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-full rounded-none">Submit link</button>
+                <button onClick={(e) => setConfAlert('', okMsg, confMsg, (succTitle) => linkSubmit(e, succTitle))} className="btn outline-solid text-white text-base font-normal outline-white btn-outline md:btn-md w-full rounded-none">Submit link</button>
             </div>
         </div>
     )
