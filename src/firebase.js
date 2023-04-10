@@ -106,3 +106,7 @@ export async function deductPoints(data) {
 export async function submitLink(data) {
     return await (update(ref(db, `data/${data.uuid}/linkEntry`), { date: new Date(), link: data.link, status: 'PENDING' }))
 }
+
+export async function getLinkSubContent() {
+    return await get(ref(db, '/linkSub'))
+}
