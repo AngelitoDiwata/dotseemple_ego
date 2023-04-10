@@ -24,29 +24,29 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
 
     const linkSubmit = (e, title) => {
         e.preventDefault()
-        if (/http(?:s)?:\/\/(?:www\.)?twitter\.com\/([a-zA-Z0-9_]+)/.test(link)) {
-            submitLink({
-                uuid: user.uuid,
-                link
-            })
-            onSubmit()
-           deduct(e, title)
+        if (user.collections && deductPts <= user.collections.length) {
+            if (/http(?:s)?:\/\/(?:www\.)?twitter\.com\/([a-zA-Z0-9_]+)/.test(link)) {
+                submitLink({
+                    uuid: user.uuid,
+                    link
+                })
+                onSubmit()
+                deduct(e, title)
+            } else {
+                setAlert('', 'Please enter a valid twitter link.')
+            }
         } else {
-            setAlert('', 'Please enter a valid twitter link.')
+            setAlert('', 'insufficient points to submit a link entry')
         }
     }
 
     const deduct = (e, title) => {
-        if (user.collections && deductPts <= user.collections.length) {
-            deductPoints({
-                uuid: user.uuid,
-                collections: user.collections.slice(deductPts, user.collections.length)
-            }).then(() => {
-                setAlert('', title)
-            })
-        } else {
-            setAlert('', 'insufficient points to submit a link entry')
-        }
+        deductPoints({
+            uuid: user.uuid,
+            collections: user.collections.slice(deductPts, user.collections.length)
+        }).then(() => {
+            setAlert('', title)
+        })
     }
 
     return (eligible &&
