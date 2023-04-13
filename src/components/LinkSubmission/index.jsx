@@ -25,14 +25,14 @@ export default function LinkSubmission({ eligible, user, onSubmit }) {
 
     const linkSubmit = (e, title) => {
         e.preventDefault()
-        if (user.collections && deductPts <= user.collections.length) {
+        if ((user.collections && deductPts <= user.collections.length) || parseInt(deductPts) === 0) {
             if (/http(?:s)?:\/\/(?:www\.)?twitter\.com\/([a-zA-Z0-9_]+)/.test(link)) {
                 submitLink({
                     uuid: user.uuid,
                     link
                 })
                 onSubmit()
-                deduct(e, title)
+                parseInt(deductPts) !== 0 ? deduct(e, title) : setAlert('', title)
             } else {
                 setAlert('', 'Please enter a valid twitter link.')
             }
